@@ -1,0 +1,343 @@
+* {
+	margin: 0;
+	padding: 0;
+}
+
+.screen {
+	width: 1024px;
+	height: 600px;
+	margin: 0 auto;
+	overflow: hidden;
+	position: relative;
+	background-image: url(img/bg.png);
+}
+
+.sprite {
+	background-repeat: no-repeat;
+	background-image: url(img/sprite.png);
+}
+
+
+/*--------------- Screen Elements ---------------*/
+
+.screen .controls {
+	top: 20px;
+	left: 905px;
+	width: 105px;
+	position: absolute;
+}
+
+.screen .controls div {
+	margin-right: 5px;
+	display: inline-block;
+}
+
+/*--------------- Splash Elements ---------------*/
+
+.splash .parrot {
+	width: 1024px;
+	height: 600px;
+	position: absolute;
+	background-image: url(img/splash-parrot.png);
+}
+
+.splash .light {
+	width: 1429px;
+	height: 1429px;
+	top: -190px;
+	left: -210px;
+	position: absolute;
+	transform: rotate(0deg);
+	-webkit-transform: rotate(0deg);
+	animation: lightRotation linear 20s infinite;
+	-webkit-animation: lightRotation linear 20s infinite;
+	background-image: url(img/light.png);
+}
+
+.splash .buttons {
+	top: 425px;
+	left: 419px;
+	width: 190px;
+	height: 150px;
+	position: absolute;
+}
+
+.splash .btn-credits {
+	top: 520px;
+	left: 840px;
+	position: absolute;
+}
+
+/*--------------- Help Screen ---------------*/
+
+.splash .help-screen {
+	width: 1024px;
+	height: 600px;
+	position: absolute;
+	background-image: url(img/bg-shadow.png);
+
+}
+
+.splash .help-screen .dialog {
+	width: 623px;
+	height: 480px;
+	margin: 10px auto;
+	background-image: url(img/help/dialog.png);
+}
+
+.splash .help-screen .btn-back {
+	margin: 0 auto;
+}
+
+.splash .help-screen .help-parrot {
+	width: 220px;
+	height: 256px;
+	float: right;
+	margin: -180px 130px 0 0;
+	background-image: url(img/help/parrot.png);
+}
+
+/*--------------- Play Screen ---------------*/
+
+.playing {
+	background-image: url(img/bg-game.png);
+}
+
+.playing .btn-pause {
+	margin: 15px;
+}
+
+.playing .play-parrot {
+	top: 375px;
+	left: 10px;
+	width: 177px;
+	height: 256px;
+	position: absolute;
+	background-image: url(img/parrot.png);
+}
+
+.playing .textbox {
+	top: 450px;
+	left: 100px;
+	width: 793px;
+	height: 146px;
+	position: absolute;
+	background-image: url(img/textbox.png);
+}
+
+.playing .btn-speech {
+	top: 465px;
+	left: 865px;
+	position: absolute;
+}
+
+/*--------------- Pause Screen ---------------*/
+
+.playing .pause-screen {
+	top: 0;
+	left: 0;
+	width: 1024px;
+	height: 600px;
+	position: absolute;
+	background-image: url(img/bg-shadow.png);
+
+}
+
+.playing .pause-screen .dialog {
+	width: 314px;
+	height: 185px;
+	margin: 80px auto 0;
+	padding: 170px 50px 0 50px;
+	background-image: url(img/pause/dialog.png);
+}
+
+.playing .pause-screen .dialog div {
+	width: 150px;
+	height: 52px;
+	cursor: pointer;
+	margin: 5px auto;
+}
+
+/*--------------- Buttons ---------------*/
+
+.btn-play {
+	width: 190px;
+	height: 72px;
+	cursor: pointer;
+	background-position: -201px 0;
+}
+
+.btn-play:hover {
+	background-position: -201px -70px;
+}
+
+.btn-play:active {
+	background-position: -200px -142px;
+}
+
+.btn-help {
+	width: 190px;
+	height: 72px;
+	cursor: pointer;
+	background-position: -400px 0;
+}
+
+.btn-help:hover {
+	background-position: -400px -71px;
+}
+
+.btn-help:active {
+	background-position: -395px -140px;
+}
+
+.btn-credits {
+	width: 150px;
+	height: 58px;
+	cursor: pointer;
+	background-position: -5px -210px;
+}
+
+.btn-credits:hover {
+	background-position: -5px -270px;
+}
+
+.btn-credits:active {
+	background-position: -5px -331px;
+}
+
+.btn-sound {
+	width: 44px;
+	height: 44px;
+	cursor: pointer;
+	background-position: -568px -298px;
+}
+
+.btn-sound:hover {
+	background-position: -569px -249px;
+}
+
+.btn-sound.off {
+	background-position: -617px -297px;
+}
+
+.btn-sound.off:hover {
+	background-position: -617px -249px;
+}
+
+.btn-volume {
+	width: 44px;
+	height: 44px;
+	cursor: pointer;
+	background-position: -472px -249px;
+}
+
+.btn-volume:hover {
+	background-position: -473px -297px;
+}
+
+.btn-volume.off {
+	background-position: -521px -249px;
+}
+
+.btn-volume.off:hover {
+	background-position: -521px -297px;
+}
+
+.btn-back {
+	width: 190px;
+	height: 72px;
+	cursor: pointer;
+	background-position: -4px 0;
+}
+
+.btn-back:hover {
+	background-position: -4px -72px;
+}
+
+.btn-back:active {
+	background-position: -3px -144px;
+}
+
+.btn-pause {
+	width: 76px;
+	height: 76px;
+	cursor: pointer;
+	background-position: -602px -4px;
+}
+
+.btn-pause:hover {
+	background-position: -602px -80px;
+}
+
+.btn-pause:active {
+	background-position: -601px -157px;
+}
+
+.btn-speech {
+	width: 120px;
+	height: 120px;
+	cursor: pointer;
+	background-position: -595px -349px;
+}
+
+.btn-speech.off {
+	background-position: -464px -349px;
+}
+
+.btn-back-to-game {
+	background-position: -6px -395px;
+}
+
+.btn-back-to-game:hover {
+	background-position: -158px -395px;
+}
+
+.btn-back-to-game:active {
+	background-position: -309px -395px;
+}
+
+.btn-select-level {
+	background-position: -160px -217px;
+}
+
+.btn-select-level:hover {
+	background-position: -160px -276px;
+}
+
+.btn-select-level:active {
+	background-position: -160px -336px;
+}
+
+.btn-menu {
+	background-position: -314px -217px;
+}
+
+.btn-menu:hover {
+	background-position: -314px -277px;
+}
+
+.btn-menu:active {
+	background-position: -314px -338px;
+}
+
+/*--------------- Keyframes ---------------*/
+
+
+@keyframes lightRotation {
+	from   {
+		transform: rotate(0deg);
+	}
+	to {
+		transform: rotate(360deg);
+	}
+}
+
+@-webkit-keyframes lightRotation {
+	from   {
+		-webkit-transform: rotate(0deg);
+	}
+	to {
+		-webkit-transform: rotate(360deg);
+	}
+}
+
