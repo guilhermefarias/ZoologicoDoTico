@@ -6,9 +6,18 @@ var Game = {
 
 		jQuery(document).on('click','.btn-back', function(){
 			jQuery('.help-screen').remove();
+			jQuery('.credit-screen').remove();
+		});
+
+		jQuery(document).on('click','.btn-credits', function(){
+			Game.showCredits();
 		});
 
 		jQuery(document).on('click','.btn-play', function(){
+			Game.selectLevel();
+		});
+
+		jQuery(document).on('click','.btn-select-level', function(){
 			Game.selectLevel();
 		});
 
@@ -87,6 +96,15 @@ var Game = {
 				'</div>'+
 			'</div>';
 		jQuery('.screen').append(pauseScreen);
+	},
+	showCredits: function(){
+		var creditScreen = ''+
+			'<div class="credit-screen">'+
+				'<div class="dialog">'+
+					'<div class="btn-back sprite"></div>'+
+				'</div>'+
+			'</div>';
+		jQuery('.screen').append(creditScreen);
 	},
 	showHelp: function(){
 		var helpScreen = ''+

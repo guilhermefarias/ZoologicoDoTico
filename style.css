@@ -97,6 +97,28 @@
 	background-image: url(img/help/parrot.png);
 }
 
+/*--------------- Credit Screen ---------------*/
+
+.splash .credit-screen {
+	width: 1024px;
+	height: 600px;
+	position: absolute;
+	background-image: url(img/bg-shadow.png);
+}
+
+.splash .credit-screen .dialog {
+	width: 623px;
+	height: 10px;
+	margin: 40px auto 0;
+	padding-top: 470px;
+	background-image: url(img/credits/dialog.png);
+}
+
+.splash .credit-screen .btn-back {
+	margin: 0 auto;
+}
+
+
 /*--------------- Play Screen ---------------*/
 
 .playing {
