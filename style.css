@@ -158,6 +158,33 @@
 	margin: 5px auto;
 }
 
+/*--------------- Level Screen ---------------*/
+
+.level-screen {
+	top: 0;
+	left: 0;
+	width: 1024px;
+	height: 600px;
+	position: absolute;
+	background-image: url(img/bg-shadow.png);
+
+}
+
+.level-screen .dialog {
+	width: 623px;
+	height: 309px;
+	margin: 80px auto 0;
+	padding-top: 170px;
+	background-image: url(img/level/dialog.png);
+}
+
+.level-screen .dialog div {
+	width: 185px;
+	height: 90px;
+	cursor: pointer;
+	margin: 5px auto;
+}
+
 /*--------------- Buttons ---------------*/
 
 .btn-play {
@@ -320,6 +347,18 @@
 	background-position: -314px -338px;
 }
 
+
+.btn-level1 {
+	background-position: 1px -452px;
+}
+
+.btn-level1:hover {
+	background-position: -182px -452px;
+}
+
+.btn-level1:active {
+	background-position: -182px -452px;
+}
 /*--------------- Keyframes ---------------*/
 
 

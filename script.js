@@ -9,7 +9,7 @@ var Game = {
 		});
 
 		jQuery(document).on('click','.btn-play', function(){
-			Game.startGame();
+			Game.selectLevel();
 		});
 
 		jQuery(document).on('click','.btn-speech', function(){
@@ -36,11 +36,25 @@ var Game = {
 			Game.showPause();
 		});
 	},
-	startGame: function(){
+	selectLevel: function(){
+		var levelScreen = ''+
+			'<div class="level-screen">'+
+				'<div class="dialog">'+
+					'<div class="btn-level1 sprite"></div>'+
+				'</div>'+
+			'</div>';
+		jQuery('.screen').append(levelScreen);
+
+		jQuery('.level-screen').on('click','.btn-level1', function(){
+			Game.startGame('level 1');
+		});
+	},
+	startGame: function(level){
 		var GameScreen = jQuery('.screen');
 		GameScreen.empty();
 		GameScreen.attr('class','screen playing');
 		Game.showPlay();
+		console.log('Nível escolhido: ' + level);
 	},
 	backToSplashScreen: function(){
 		var GameScreen = jQuery('.screen');
@@ -151,9 +165,10 @@ var Game = {
 				};
 
 				Game.Speech.recognition.onresult = function(event) {
-					console.log('RESULT!');
 					Game.Speech.result = event.results[0][0].transcript;
-					if(Game.Speech.result == "Girafa"){
+					console.log('RESULT!',event);
+					console.log('TEXTO: ' + Game.Speech.result);
+					if(Game.Speech.result == "girafa"){
 						alert('ACERTOU!');
 					} else {
 						alert('ERROU!');
