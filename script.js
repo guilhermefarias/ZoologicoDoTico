@@ -26,11 +26,11 @@ var Game = {
 		});
 
 		jQuery(document).on('click','.btn-sound', function(){
-			Game.Utils.toggleOff(jQuery(this));
+			Game.Audio.toggleSound(jQuery(this));
 		});
 
 		jQuery(document).on('click','.btn-volume', function(){
-			Game.Utils.toggleOff(jQuery(this));
+			Game.Audio.toggleMusic(jQuery(this));
 		});
 
 		jQuery(document).on('click','.btn-back-to-game', function(){
@@ -89,6 +89,7 @@ var Game = {
 			'<audio id="splash-audio" src="audio/audio-splash.mp3" loop></audio>';
 		jQuery('.screen').append(splashScreen);
 		Game.Audio.playSplash();
+		Game.Audio.setupButtons();
 	},
 	showPause: function(){
 		var pauseScreen = ''+
@@ -134,6 +135,7 @@ var Game = {
 		jQuery('.playing').append(playScreen);
 		Game.Speech.setup();
 		Game.Audio.playGame();
+		Game.Audio.setupButtons();
 	},
 	Utils: {
 		toggleOff:function(element){
@@ -207,14 +209,66 @@ var Game = {
 		}
 	},
 	Audio: {
+		sound: true,
+		music: true,
+		setupButtons: function(){
+			var soundButton = jQuery('.btn-sound'),
+				volumeButton = jQuery('.btn-volume');
+
+			if(!Game.Audio.music){
+				volumeButton.addClass('off');
+			}
+
+			if(!Game.Audio.sound){
+				soundButton.addClass('off');
+			}
+		},
+		toggleSound: function(element){
+			var splashAudio = document.getElementById('splash-audio'),
+				gameAudio = document.getElementById('game-audio');
+			if(element.hasClass('off')){
+				Game.Audio.sound = true;
+				if(gameAudio){
+					gameAudio.play();
+				} else if(splashAudio){
+					splashAudio.play();
+				}
+			} else {
+				Game.Audio.sound = false;
+				if(gameAudio){
+					gameAudio.pause();
+				} else if(splashAudio){
+					splashAudio.pause();
+				}
+			}
+			Game.Utils.toggleOff(element);
+		},
+		toggleMusic: function(element){
+			var winAudio = document.getElementById('win-audio');
+			if(element.hasClass('off')){
+				Game.Audio.music = true;
+			} else {
+				Game.Audio.music = false;
+				if(winAudio){
+					winAudio.pause();
+				}
+			}
+			Game.Utils.toggleOff(element);
+		},
 		playSplash: function(){
-			document.getElementById('splash-audio').play();
+			if(Game.Audio.sound){
+				document.getElementById('splash-audio').play();	
+			}
 		},
 		playGame: function(){
-			document.getElementById('game-audio').play();
+			if(Game.Audio.sound){
+				document.getElementById('game-audio').play();
+			}
 		},
 		playWin: function(){
-			document.getElementById('win-audio').play();
+			if(Game.Audio.music){
+				document.getElementById('win-audio').play();
+			}
 		}
 	}
 }

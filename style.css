@@ -194,9 +194,9 @@
 
 .level-screen .dialog {
 	width: 623px;
-	height: 309px;
+	height: 359px;
 	margin: 80px auto 0;
-	padding-top: 170px;
+	padding-top: 120px;
 	background-image: url(img/level/dialog.png);
 }
 
