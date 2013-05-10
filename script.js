@@ -44,6 +44,8 @@ var Game = {
 		jQuery(document).on('click','.btn-pause', function(){
 			Game.showPause();
 		});
+
+		Game.Audio.playSplash();
 	},
 	selectLevel: function(){
 		var levelScreen = ''+
@@ -83,8 +85,10 @@ var Game = {
 				'<div class="btn-play sprite"></div>'+
 				'<div class="btn-help sprite"></div>'+
 			'</div>'+
-			'<div class="btn-credits sprite"></div>';
+			'<div class="btn-credits sprite"></div>'+
+			'<audio id="splash-audio" src="audio/audio-splash.mp3" loop></audio>';
 		jQuery('.screen').append(splashScreen);
+		Game.Audio.playSplash();
 	},
 	showPause: function(){
 		var pauseScreen = ''+
@@ -124,9 +128,12 @@ var Game = {
 			'</div>'+
 			'<div class="play-parrot"></div>'+
 			'<div class="textbox"></div>'+
-			'<div class="btn-speech sprite off"></div>';
+			'<div class="btn-speech sprite off"></div>'+
+			'<audio id="game-audio" src="audio/audio-game.mp3" loop></audio>'+
+			'<audio id="win-audio" src="audio/audio-victory.mp3"></audio>';
 		jQuery('.playing').append(playScreen);
 		Game.Speech.setup();
+		Game.Audio.playGame();
 	},
 	Utils: {
 		toggleOff:function(element){
@@ -187,6 +194,7 @@ var Game = {
 					console.log('RESULT!',event);
 					console.log('TEXTO: ' + Game.Speech.result);
 					if(Game.Speech.result == "girafa"){
+						Game.Audio.playWin();
 						alert('ACERTOU!');
 					} else {
 						alert('ERROU!');
@@ -196,6 +204,17 @@ var Game = {
 				alert('Você precisa do Google Chrome para jogar :/');
 				Game.backToSplashScreen();
 			}
+		}
+	},
+	Audio: {
+		playSplash: function(){
+			document.getElementById('splash-audio').play();
+		},
+		playGame: function(){
+			document.getElementById('game-audio').play();
+		},
+		playWin: function(){
+			document.getElementById('win-audio').play();
 		}
 	}
 }
