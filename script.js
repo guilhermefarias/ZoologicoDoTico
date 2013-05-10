@@ -45,6 +45,14 @@ var Game = {
 			Game.showPause();
 		});
 
+		jQuery(document).on('mouseenter','div[class*="btn-"]', function(){
+			Game.Audio.playOver();
+		});
+
+		jQuery(document).on('click','div[class*="btn-"]', function(){
+			Game.Audio.playClick();
+		});
+
 		Game.Audio.playSplash();
 	},
 	selectLevel: function(){
@@ -86,7 +94,9 @@ var Game = {
 				'<div class="btn-help sprite"></div>'+
 			'</div>'+
 			'<div class="btn-credits sprite"></div>'+
-			'<audio id="splash-audio" src="audio/audio-splash.mp3" loop></audio>';
+			'<audio id="splash-audio" src="audio/audio-splash.mp3" loop></audio>'+
+			'<audio id="over-audio" src="audio/audio-mouse-over.wav"></audio>'+
+			'<audio id="click-audio" src="audio/audio-mouse-click.wav"></audio>';
 		jQuery('.screen').append(splashScreen);
 		Game.Audio.playSplash();
 		Game.Audio.setupButtons();
@@ -131,7 +141,9 @@ var Game = {
 			'<div class="textbox"></div>'+
 			'<div class="btn-speech sprite off"></div>'+
 			'<audio id="game-audio" src="audio/audio-game.mp3" loop></audio>'+
-			'<audio id="win-audio" src="audio/audio-victory.mp3"></audio>';
+			'<audio id="win-audio" src="audio/audio-victory.mp3"></audio>'+
+			'<audio id="over-audio" src="audio/audio-mouse-over.wav"></audio>'+
+			'<audio id="click-audio" src="audio/audio-mouse-click.wav"></audio>';
 		jQuery('.playing').append(playScreen);
 		Game.Speech.setup();
 		Game.Audio.playGame();
@@ -268,6 +280,16 @@ var Game = {
 		playWin: function(){
 			if(Game.Audio.music){
 				document.getElementById('win-audio').play();
+			}
+		},
+		playOver: function(){
+			if(Game.Audio.music){
+				document.getElementById('over-audio').play();
+			}
+		},
+		playClick: function(){
+			if(Game.Audio.music){
+				document.getElementById('click-audio').play();
 			}
 		}
 	}
