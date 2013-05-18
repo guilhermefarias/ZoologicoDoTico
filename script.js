@@ -72,7 +72,7 @@ var Game = {
 		var GameScreen = jQuery('.screen');
 		GameScreen.empty();
 		GameScreen.attr('class','screen playing');
-		Game.showPlay();
+		Game.showPlay('giraffe');
 		console.log('Nível escolhido: ' + level);
 	},
 	backToSplashScreen: function(){
@@ -130,16 +130,18 @@ var Game = {
 			'</div>';
 		jQuery('.screen').append(helpScreen);
 	},
-	showPlay: function(){
+	showPlay: function(animal){
 		var playScreen = ''+
 			'<div class="btn-pause sprite"></div>'+
 			'<div class="controls">'+
 				'<div class="btn-sound sprite"></div>'+
 				'<div class="btn-volume sprite"></div>'+
 			'</div>'+
+			'<div class="animal '+ animal +'"></div>'+
 			'<div class="play-parrot"></div>'+
 			'<div class="textbox"></div>'+
 			'<div class="btn-speech sprite off"></div>'+
+			'<div class="light"></div>'+
 			'<audio id="game-audio" src="audio/audio-game.mp3" loop></audio>'+
 			'<audio id="win-audio" src="audio/audio-victory.mp3"></audio>'+
 			'<audio id="over-audio" src="audio/audio-mouse-over.wav"></audio>'+
@@ -148,6 +150,11 @@ var Game = {
 		Game.Speech.setup();
 		Game.Audio.playGame();
 		Game.Audio.setupButtons();
+	},
+	win: function(){
+		Game.Audio.playWin();
+		jQuery('.animal').addClass('win');
+		jQuery('.light').addClass('win');
 	},
 	Utils: {
 		toggleOff:function(element){
@@ -208,7 +215,7 @@ var Game = {
 					console.log('RESULT!',event);
 					console.log('TEXTO: ' + Game.Speech.result);
 					if(Game.Speech.result == "girafa"){
-						Game.Audio.playWin();
+						Game.win();
 						alert('ACERTOU!');
 					} else {
 						alert('ERROU!');
