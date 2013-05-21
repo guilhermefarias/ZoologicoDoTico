@@ -193,6 +193,7 @@
 	left: 0;
 	width: 1024px;
 	height: 600px;
+	z-index: 2;
 	position: absolute;
 	background-image: url(img/bg-shadow.png);
 
@@ -220,6 +221,7 @@
 	left: 0;
 	width: 1024px;
 	height: 600px;
+	z-index: 2;
 	position: absolute;
 	background-image: url(img/bg-shadow.png);
 
