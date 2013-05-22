@@ -1,53 +1,42 @@
 var Game = {
+	animal: null,
 	setup: function(){
-		//verificar se o loading foi carregado e então dá o inser media
+		//verificar se o loading foi carregado e então dá o insert media
 		Game.insertMedia();
 		//verificar se as midias foram carregadas e então dá o backToSplashScreen
-		setTimeout(Game.backToSplashScreen,2000);
+		//setTimeout(Game.backToSplashScreen,2000);
+		Game.backToSplashScreen();
+		Game.buttonSetup();
 	},
 	backToSplashScreen: function(){
 		var GameScreen = jQuery('.screen');
 		GameScreen.empty();
-		GameScreen.attr('class','screen splash');
-		Game.showSplash();
-	},
-	showSplash: function(){
-		var splashScreen = ''+
-			'<div class="light"></div>'+
-			'<div class="parrot"></div>'+
-			'<div class="controls">'+
-				'<div class="btn-sound sprite"></div>'+
-				'<div class="btn-volume sprite"></div>'+
-			'</div>'+
-			'<div class="buttons">'+
-				'<div class="btn-play sprite"></div>'+
-				'<div class="btn-help sprite"></div>'+
-			'</div>'+
-			'<div class="btn-credits sprite"></div>';
-		jQuery('.screen').append(splashScreen);
+		GameScreen.attr('class','screen splash sprite-all');
+		Game.Show.splash();
 		Game.Audio.playSplash();
 		Game.Audio.setupButtons();
 	},
 	buttonSetup: function(){
 		jQuery(document).on('click','.btn-help', function(){
-			Game.showHelp();
+			Game.Show.helpModal();
 		});
 
 		jQuery(document).on('click','.btn-back', function(){
 			jQuery('.help-screen').remove();
 			jQuery('.credit-screen').remove();
+			jQuery('.level-screen').remove();
 		});
 
 		jQuery(document).on('click','.btn-credits', function(){
-			Game.showCredits();
+			Game.Show.creditsModal();
 		});
 
 		jQuery(document).on('click','.btn-play', function(){
-			Game.selectLevel();
+			Game.Show.levelModal();
 		});
 
 		jQuery(document).on('click','.btn-select-level', function(){
-			Game.selectLevel();
+			Game.Show.levelModal();
 		});
 
 		jQuery(document).on('click','.btn-speech', function(){
@@ -71,11 +60,7 @@ var Game = {
 		});
 
 		jQuery(document).on('click','.btn-pause', function(){
-			Game.showPause();
-		});
-
-		jQuery(document).on('mouseenter','div[class*="btn-"]', function(){
-			Game.Audio.playOver();
+			Game.Show.pauseModal();
 		});
 
 		jQuery(document).on('click','div[class*="btn-"]', function(){
@@ -84,89 +69,129 @@ var Game = {
 	},
 	insertMedia: function(){
 		var mediaObjects = ''+
-		'<img id="sprite-al" src="img/sprite-all.png">'+
-		'<img id="sprite-al" src="img/sprite-buttons.png">'+
-		'<audio id="win-audio" src="audio/audio-victory.mp3"></audio>'+
-		'<audio id="game-audio" src="audio/audio-game.mp3" loop></audio>'+
-		'<audio id="click-audio" src="audio/audio-mouse-click.wav"></audio>'+
-		'<audio id="splash-audio" src="audio/audio-splash.mp3" loop></audio>';
-		jQuery('#midia').html(mediaObjects);
-	},
-	selectLevel: function(){
-		var levelScreen = ''+
-			'<div class="level-screen">'+
-				'<div class="dialog">'+
-					'<div class="btn-level1 sprite"></div>'+
-				'</div>'+
-			'</div>';
-		jQuery('.screen').append(levelScreen);
-
-		jQuery('.level-screen').on('click','.btn-level1', function(){
-			Game.startGame('level 1');
-		});
+		'<div id="media" onload="Game.backToSplashScreen()">'+
+			'<img id="sprite-all" src="img/sprite-all.png">'+
+			'<img id="sprite-buttons" src="img/sprite-buttons.png">'+
+			'<audio id="win-audio" src="audio/audio-victory.mp3"></audio>'+
+			'<audio id="game-audio" src="audio/audio-game.mp3" loop></audio>'+
+			'<audio id="click-audio" src="audio/audio-mouse-click.wav"></audio>'+
+			'<audio id="splash-audio" src="audio/audio-splash.mp3" loop></audio>'+
+		'</div>';
+		jQuery('body').append(mediaObjects);
 	},
 	startGame: function(level){
 		var GameScreen = jQuery('.screen');
 		GameScreen.empty();
-		GameScreen.attr('class','screen playing');
-		Game.showPlay('giraffe');
-		console.log('Nível escolhido: ' + level);
-	},
-
-	showPause: function(){
-		var pauseScreen = ''+
-			'<div class="pause-screen">'+
-				'<div class="dialog">'+
-					'<div class="btn-back-to-game sprite"></div>'+
-					'<div class="btn-select-level sprite"></div>'+
-					'<div class="btn-menu sprite"></div>'+
-				'</div>'+
-			'</div>';
-		jQuery('.screen').append(pauseScreen);
-	},
-	showCredits: function(){
-		var creditScreen = ''+
-			'<div class="credit-screen">'+
-				'<div class="dialog">'+
-					'<div class="btn-back sprite"></div>'+
-				'</div>'+
-			'</div>';
-		jQuery('.screen').append(creditScreen);
-	},
-	showHelp: function(){
-		var helpScreen = ''+
-			'<div class="help-screen">'+
-				'<div class="dialog"></div>'+
-				'<div class="help-parrot"></div>'+
-				'<div class="btn-back sprite"></div>'+
-			'</div>';
-		jQuery('.screen').append(helpScreen);
-	},
-	showPlay: function(animal){
-		var playScreen = ''+
-			'<div class="btn-pause sprite"></div>'+
-			'<div class="controls">'+
-				'<div class="btn-sound sprite"></div>'+
-				'<div class="btn-volume sprite"></div>'+
-			'</div>'+
-			'<div class="animal '+ animal +'"></div>'+
-			'<div class="play-parrot"></div>'+
-			'<div class="textbox"></div>'+
-			'<div class="btn-speech sprite off"></div>'+
-			'<div class="light"></div>'+
-			'<audio id="game-audio" src="audio/audio-game.mp3" loop></audio>'+
-			'<audio id="win-audio" src="audio/audio-victory.mp3"></audio>'+
-			'<audio id="over-audio" src="audio/audio-mouse-over.wav"></audio>'+
-			'<audio id="click-audio" src="audio/audio-mouse-click.wav"></audio>';
-		jQuery('.playing').append(playScreen);
+		GameScreen.attr('class','screen playing sprite-all');
+		Game.Show.play(Game.getAnimal());
 		Game.Speech.setup();
 		Game.Audio.playGame();
 		Game.Audio.setupButtons();
 	},
+	getAnimal: function(){
+		// Aqui fica todos os animais que estão no Jogo
+		// Essa função escolhe aleatoriamente algum animal
+		var animals = [],
+			animalsBr = [],
+			randomKey = null;
+		
+		animals[0] = "giraffe";
+		animals[1] = "shark";
+		animals[2] = "owl";
+		animals[3] = "kangaroo";
+
+		animalsBr[0] = "girafa";
+		animalsBr[1] = "tubarão";
+		animalsBr[2] = "coruja";
+		animalsBr[3] = "canguru";
+
+		randomKey = Math.floor(Math.random()*animals.length);
+		Game.animal = animalsBr[randomKey];
+		return animals[randomKey];
+	},
 	win: function(){
 		Game.Audio.playWin();
-		jQuery('.animal').addClass('win');
-		jQuery('.light').addClass('win');
+		jQuery('.screen').addClass('win');
+	},
+	checkWin: function(speak){
+		if(speak == Game.animal){
+			Game.win();
+		} else {
+			alert('QUE PENA, VOCÊ ERROU');
+		}
+	},
+	Show: {
+		splash: function(){
+			var splashScreen = ''+
+				'<div class="light "></div>'+
+				'<div class="splash-parrot sprite-all"></div>'+
+				'<div class="controls">'+
+					'<div class="btn-sound sprite-bt"></div>'+
+					'<div class="btn-volume sprite-bt"></div>'+
+				'</div>'+
+				'<div class="buttons">'+
+					'<div class="btn-play sprite-bt"></div>'+
+					'<div class="btn-help sprite-bt"></div>'+
+				'</div>'+
+				'<div class="btn-credits sprite-bt"></div>';
+			jQuery('.screen').append(splashScreen);
+		},
+		play: function(animal){
+			var playScreen = ''+
+				'<div class="btn-pause sprite-bt"></div>'+
+				'<div class="controls">'+
+					'<div class="btn-sound sprite-bt"></div>'+
+					'<div class="btn-volume sprite-bt"></div>'+
+				'</div>'+
+				'<div class="animal '+ animal +'"></div>'+
+				'<div class="play-parrot sprite-all"></div>'+
+				'<div class="textbox sprite-all"></div>'+
+				'<div class="btn-speech sprite-bt off"></div>'+
+				'<div class="light"></div>';
+			jQuery('.playing').append(playScreen);
+		},
+		pauseModal: function(){
+			var pauseScreen = ''+
+				'<div class="pause-screen">'+
+					'<div class="dialog sprite-all">'+
+						'<div class="btn-back-to-game sprite-bt"></div>'+
+						'<div class="btn-select-level sprite-bt"></div>'+
+						'<div class="btn-menu sprite-bt"></div>'+
+					'</div>'+
+				'</div>';
+			jQuery('.screen').append(pauseScreen);
+		},
+		creditsModal: function(){
+			var creditScreen = ''+
+				'<div class="credit-screen">'+
+					'<div class="dialog sprite-all">'+
+						'<div class="btn-back sprite-bt"></div>'+
+					'</div>'+
+				'</div>';
+			jQuery('.screen').append(creditScreen);
+		},
+		helpModal: function(){
+			var helpScreen = ''+
+				'<div class="help-screen">'+
+					'<div class="dialog sprite-all"></div>'+
+					'<div class="help-parrot sprite-all"></div>'+
+					'<div class="btn-back sprite-bt"></div>'+
+				'</div>';
+			jQuery('.screen').append(helpScreen);
+		},
+		levelModal: function(){
+			var levelScreen = ''+
+				'<div class="level-screen">'+
+					'<div class="dialog sprite-all">'+
+						'<div class="btn-level1 sprite-bt"></div>'+
+						'<div class="btn-back sprite-bt"></div>'+
+					'</div>'+
+				'</div>';
+			jQuery('.screen').append(levelScreen);
+			jQuery('.level-screen').on('click','.btn-level1', function(){
+				Game.startGame('level 1');
+			});
+		}
 	},
 	Utils: {
 		toggleOff:function(element){
@@ -226,12 +251,7 @@ var Game = {
 					Game.Speech.result = event.results[0][0].transcript;
 					console.log('RESULT!',event);
 					console.log('TEXTO: ' + Game.Speech.result);
-					if(Game.Speech.result == "girafa"){
-						Game.win();
-						alert('ACERTOU!');
-					} else {
-						alert('ERROU!');
-					}
+					Game.checkWin(Game.Speech.result);
 				};
 			} else {
 				alert('Você precisa do Google Chrome para jogar :/');
@@ -299,11 +319,6 @@ var Game = {
 		playWin: function(){
 			if(Game.Audio.music){
 				document.getElementById('win-audio').play();
-			}
-		},
-		playOver: function(){
-			if(Game.Audio.music){
-				document.getElementById('over-audio').play();
 			}
 		},
 		playClick: function(){

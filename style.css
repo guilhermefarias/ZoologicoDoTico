@@ -12,21 +12,20 @@ body {
 .screen {
 	width: 1024px;
 	height: 600px;
-	margin: 20px auto 0;
 	overflow: hidden;
 	position: relative;
+	margin: 20px auto 0;
 	box-shadow: 0 0 10px 1px #888;
-	background-image: url(img/bg.png);
 }
 
-.sprite {
+.sprite-bt {
 	background-repeat: no-repeat;
-	background-image: url(img/sprite.png);
+	background-image: url(img/sprite-buttons.png);
 }
 
 .sprite-all {
 	background-repeat: no-repeat;
-	background-image: url(img/sprite-all.png);	
+	background-image: url(img/sprite-all.png);
 }
 
 /*--------------- Load Screen ---------------*/
@@ -79,21 +78,32 @@ body {
 	background-image: url(img/light.png);
 }
 
-#midia,
-#midia * {
+#media,
+#media * {
 	width: 0;
 	height: 0;
 	display: block;
 	overflow: hidden;
 }
 
-/*--------------- Splash Elements ---------------*/
+/*--------------- Splash Screen ---------------*/
 
-.splash .parrot {
-	width: 1024px;
-	height: 600px;
+.splash {
+	background-position: 0 0;
+}
+
+.splash-parrot {
+	bottom: 0;
+	left: 50%;
+	width: 823px;
+	height: 570px;
 	position: absolute;
-	background-image: url(img/splash-parrot.png);
+	margin-left: -411px;
+	background-position: -1720px -1150px;
+}
+
+.splash-parrot.blink {
+	background-position: -1700px -550px;
 }
 
 .splash .light {
@@ -115,71 +125,14 @@ body {
 	position: absolute;
 }
 
-/*--------------- Help Screen ---------------*/
-
-.splash .help-screen {
-	width: 1024px;
-	height: 600px;
-	position: absolute;
-	background-image: url(img/bg-shadow.png);
-
-}
-
-.splash .help-screen .dialog {
-	width: 623px;
-	height: 480px;
-	margin: 10px auto;
-	background-image: url(img/help/dialog.png);
-}
-
-.splash .help-screen .btn-back {
-	margin: 0 auto;
-}
-
-.splash .help-screen .help-parrot {
-	width: 220px;
-	height: 256px;
-	float: right;
-	margin: -180px 130px 0 0;
-	background-image: url(img/help/parrot.png);
-}
-
-/*--------------- Credit Screen ---------------*/
-
-.splash .credit-screen {
-	width: 1024px;
-	height: 600px;
-	position: absolute;
-	background-image: url(img/bg-shadow.png);
-}
-
-.splash .credit-screen .dialog {
-	width: 623px;
-	height: 10px;
-	margin: 40px auto 0;
-	padding-top: 470px;
-	background-image: url(img/credits/dialog.png);
-}
-
-.splash .credit-screen .btn-back {
-	margin: 0 auto;
-}
-
 /*--------------- Play Screen ---------------*/
 
 .playing {
-	background-image: url(img/bg-game.png);
+	background-position: 0 -610px;
 }
 
-.playing .animal {
-	width: 350px;
-	height: 350px;
-	left: 50%;
-	top: -45px;
-	z-index: 1;
-	margin-left: -175px;
-	position: relative;
-	background-repeat: no-repeat;
+.playing.win {
+	background-position: 0 -1220px;
 }
 
 .playing .light {
@@ -189,65 +142,121 @@ body {
 	visibility: hidden;
 }
 
-.playing .light.win {
+.playing.win .light {
 	visibility: visible;
 }
 
-.playing .btn-pause {
+.animal {
+	z-index: 1;
+	position: relative;
+	background-image: url(img/sprite-all.png);
+}
+
+.btn-pause {
 	margin: 15px;
 	z-index: 1;
 	position: relative;
 }
 
-.playing .play-parrot {
+.play-parrot {
 	top: 375px;
 	left: 10px;
 	width: 177px;
 	height: 256px;
 	z-index: 1;
 	position: absolute;
-	background-image: url(img/parrot.png);
+	background-position: -2580px -350px;
 }
 
-.playing .textbox {
-	top: 450px;
-	left: 100px;
-	width: 793px;
-	height: 146px;
+.textbox {
 	z-index: 1;
+	top: 460px;
+	left: 150px;
+	width: 663px;
+	height: 125px;
 	position: absolute;
-	background-image: url(img/textbox.png);
+	background-position: -1035px -1550px;
 }
 
-.playing .btn-speech {
+.btn-speech {
 	top: 465px;
 	left: 865px;
 	z-index: 1;
 	position: absolute;
 }
 
+/*--------------- Help Modal ---------------*/
+
+.help-screen {
+	width: 1024px;
+	height: 600px;
+	z-index: 2;
+	position: absolute;
+	background-color: rgba(0,0,0,0.5);
+}
+
+.help-screen .dialog {
+	width: 623px;
+	height: 480px;
+	margin: 10px auto;
+	background-position: -1035px -550px;
+}
+
+.help-screen .btn-back {
+	margin: 0 auto;
+}
+
+.help-screen .help-parrot {
+	width: 220px;
+	height: 256px;
+	float: right;
+	margin: -180px 130px 0 0;
+	background-position: -1035px 0;
+}
+
+/*--------------- Credit Modal ---------------*/
+
+.credit-screen {
+	width: 1024px;
+	height: 600px;
+	z-index: 2;
+	position: absolute;
+	background-color: rgba(0,0,0,0.5);
+}
+
+.credit-screen .dialog {
+	width: 623px;
+	height: 10px;
+	margin: 40px auto 0;
+	padding-top: 470px;
+	background-position: -1035px -1050px;
+}
+
+.credit-screen .btn-back {
+	margin: 0 auto;
+}
+
 /*--------------- Pause Screen ---------------*/
 
-.playing .pause-screen {
+.pause-screen {
 	top: 0;
 	left: 0;
 	width: 1024px;
 	height: 600px;
 	z-index: 2;
 	position: absolute;
-	background-image: url(img/bg-shadow.png);
-
+	background-color: rgba(0,0,0,0.5);
 }
 
-.playing .pause-screen .dialog {
-	width: 314px;
-	height: 185px;
+.pause-screen .dialog {
+	width: 348px;
+	height: 193px;
 	margin: 80px auto 0;
-	padding: 170px 50px 0 50px;
-	background-image: url(img/pause/dialog.png);
+	padding-top: 130px;
+	background-position: -2580px 0;
 }
 
-.playing .pause-screen .dialog div {
+.pause-screen .dialog div {
 	width: 150px;
 	height: 52px;
 	cursor: pointer;
@@ -263,23 +272,28 @@ body {
 	height: 600px;
 	z-index: 2;
 	position: absolute;
-	background-image: url(img/bg-shadow.png);
-
+	background-color: rgba(0,0,0,0.5);
 }
 
 .level-screen .dialog {
 	width: 623px;
 	height: 359px;
-	margin: 80px auto 0;
+	margin: 60px auto 0;
 	padding-top: 120px;
-	background-image: url(img/level/dialog.png);
+	background-position: -1930px 0;
 }
 
-.level-screen .dialog div {
+.level-screen .btn-level1,
+.level-screen .btn-level2,
+.level-screen .btn-level3 {
 	width: 185px;
 	height: 90px;
 	cursor: pointer;
 	margin: 5px auto;
+}
+
+.level-screen .btn-back {
+	margin: 230px auto 0;
 }
 
 /*--------------- Buttons ---------------*/
@@ -460,13 +474,53 @@ body {
 /*--------------- Animals ---------------*/
 
 .giraffe {
-	background-position: center 0;
-	background-image: url(animals/giraffe.png);
+	top: -35px;
+	left: 415px;
+	width: 180px;
+	height: 344px;
+	background-position: -2755px -910px;
 }
 
-.giraffe.win {
-	background-position: center -350px;
+.win .giraffe {
+	background-position: -2575px -910px;
 }
+
+.shark {
+	top:100px;
+	left: 325px;
+	width: 400px;
+	height: 212px;
+	background-position: 0 -1830px;
+}
+
+.win .shark {
+	background-position: -400px -1830px;
+}
+
+.owl {
+	top:80px;
+	left: 420px;
+	width: 207px;
+	height: 242px;
+	background-position: -2575px -1285px;
+}
+
+.win .owl {
+	background-position: -2575px -1550px;
+}
+
+.kangaroo {
+	top: 120px;
+	left: 370px;
+	width: 320px;
+	height: 237px;
+	background-position: -1150px -1825px;
+}
+
+.win .kangaroo {
+	background-position: -815px -1825px;
+}
+
 /*--------------- Keyframes ---------------*/
 
 @keyframes loadRotation {
