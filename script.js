@@ -1,12 +1,10 @@
 var Game = {
 	animal: null,
 	setup: function(){
-		//verificar se o loading foi carregado e então dá o insert media
-		Game.insertMedia();
-		//verificar se as midias foram carregadas e então dá o backToSplashScreen
-		//setTimeout(Game.backToSplashScreen,2000);
+		Game.Audio.stopAll();
 		Game.backToSplashScreen();
 		Game.buttonSetup();
+		Game.Audio.setLoop();
 	},
 	backToSplashScreen: function(){
 		var GameScreen = jQuery('.screen');
@@ -14,7 +12,7 @@ var Game = {
 		GameScreen.attr('class','screen splash sprite-all');
 		Game.Show.splash();
 		Game.Audio.playSplash();
-		Game.Audio.setupButtons();
+		Game.Audio.updateButtons();
 	},
 	buttonSetup: function(){
 		jQuery(document).on('click','.btn-help', function(){
@@ -56,6 +54,7 @@ var Game = {
 		});
 
 		jQuery(document).on('click','.btn-menu', function(){
+			Game.Audio.stopGame();
 			Game.backToSplashScreen();
 		});
 
@@ -69,15 +68,17 @@ var Game = {
 	},
 	insertMedia: function(){
 		var mediaObjects = ''+
-		'<div id="media" onload="Game.backToSplashScreen()">'+
-			'<img id="sprite-all" src="img/sprite-all.png">'+
-			'<img id="sprite-buttons" src="img/sprite-buttons.png">'+
+		'<div id="media">'+
+			'<img id="sprite-all" src="img/sprite-all.png"/>'+
+			'<img id="sprite-buttons" src="img/sprite-buttons.png"/>'+
 			'<audio id="win-audio" src="audio/audio-victory.mp3"></audio>'+
-			'<audio id="game-audio" src="audio/audio-game.mp3" loop></audio>'+
+			'<audio id="game-audio" src="audio/audio-game.mp3"></audio>'+
 			'<audio id="click-audio" src="audio/audio-mouse-click.wav"></audio>'+
-			'<audio id="splash-audio" src="audio/audio-splash.mp3" loop></audio>'+
+			'<audio id="splash-audio" src="audio/audio-splash.mp3"></audio>'+
 		'</div>';
-		jQuery('body').append(mediaObjects);
+
+		jQuery("body").append(mediaObjects);
+		setTimeout(Game.setup,2000);
 	},
 	startGame: function(level){
 		var GameScreen = jQuery('.screen');
@@ -86,11 +87,15 @@ var Game = {
 		Game.Show.play(Game.getAnimal());
 		Game.Speech.setup();
 		Game.Audio.playGame();
-		Game.Audio.setupButtons();
+		Game.Audio.updateButtons();
 	},
 	getAnimal: function(){
-		// Aqui fica todos os animais que estão no Jogo
-		// Essa função escolhe aleatoriamente algum animal
+		/***********************************************************
+		**                                                        **
+		**      Aqui fica todos os animais que estão no Jogo      **
+		**    Essa função escolhe aleatoriamente algum animal     **
+		**                                                        **
+		***********************************************************/
 		var animals = [],
 			animalsBr = [],
 			randomKey = null;
@@ -189,6 +194,7 @@ var Game = {
 				'</div>';
 			jQuery('.screen').append(levelScreen);
 			jQuery('.level-screen').on('click','.btn-level1', function(){
+				Game.Audio.stopSplash();
 				Game.startGame('level 1');
 			});
 		}
@@ -230,13 +236,9 @@ var Game = {
 				Game.Speech.recognition.onerror = function(event) {
 					console.log('ERROR!',event);
 					if (event.error == 'no-speech') {
-					//ninguem falou nada
 					} else if (event.error == 'audio-capture') {
-					//sem microfone
 					} else if (event.error == 'not-allowed') {
-					//nao permitido
 					} else if (event.error == 'network') {
-					//nao conseguiu se conectar a internet
 					}
 				};
 
@@ -262,7 +264,24 @@ var Game = {
 	Audio: {
 		sound: true,
 		music: true,
-		setupButtons: function(){
+		Obj: {
+			splash: null,
+			game: null,
+			win: null,
+			click: null
+		},
+		stopAll: function(){
+			Game.Audio.Obj.splash = document.getElementById('splash-audio');
+			Game.Audio.Obj.game = document.getElementById('game-audio');
+			Game.Audio.Obj.win = document.getElementById('win-audio');
+			Game.Audio.Obj.click = document.getElementById('click-audio');
+
+			Game.Audio.Obj.splash.pause();
+			Game.Audio.Obj.game.pause();
+			Game.Audio.Obj.win.pause();
+			Game.Audio.Obj.click.pause();
+		},
+		updateButtons: function(){
 			var soundButton = jQuery('.btn-sound'),
 				volumeButton = jQuery('.btn-volume');
 
@@ -275,58 +294,66 @@ var Game = {
 			}
 		},
 		toggleSound: function(element){
-			var splashAudio = document.getElementById('splash-audio'),
-				gameAudio = document.getElementById('game-audio');
+			var screenObj = jQuery('.screen');
 			if(element.hasClass('off')){
 				Game.Audio.sound = true;
-				if(gameAudio){
-					gameAudio.play();
-				} else if(splashAudio){
-					splashAudio.play();
+				if(screenObj.hasClass('splash')){
+					Game.Audio.Obj.splash.play();
+				} else if(screenObj.hasClass('playing')){
+					Game.Audio.Obj.game.play();	
 				}
 			} else {
 				Game.Audio.sound = false;
-				if(gameAudio){
-					gameAudio.pause();
-				} else if(splashAudio){
-					splashAudio.pause();
+				if(screenObj.hasClass('splash')){
+					Game.Audio.Obj.splash.pause();
+				} else if(screenObj.hasClass('playing')){
+					Game.Audio.Obj.game.pause();	
 				}
 			}
 			Game.Utils.toggleOff(element);
 		},
 		toggleMusic: function(element){
-			var winAudio = document.getElementById('win-audio');
 			if(element.hasClass('off')){
 				Game.Audio.music = true;
 			} else {
 				Game.Audio.music = false;
-				if(winAudio){
-					winAudio.pause();
-				}
+				Game.Audio.Obj.win.pause();
 			}
 			Game.Utils.toggleOff(element);
 		},
+		setLoop: function(){
+			Game.Audio.Obj.splash.loop = true;
+			Game.Audio.Obj.game.loop = true;
+		},
 		playSplash: function(){
 			if(Game.Audio.sound){
-				document.getElementById('splash-audio').play();	
+				Game.Audio.Obj.splash.play();
 			}
+		},
+		stopSplash: function(){
+			Game.Audio.Obj.splash.pause();
+			Game.Audio.Obj.splash.currentTime = 0;
 		},
 		playGame: function(){
 			if(Game.Audio.sound){
-				document.getElementById('game-audio').play();
+				Game.Audio.Obj.game.play();
 			}
+		},
+		stopGame: function(){
+			Game.Audio.Obj.game.pause();
+			Game.Audio.Obj.game.currentTime = 0;
 		},
 		playWin: function(){
 			if(Game.Audio.music){
-				document.getElementById('win-audio').play();
+				Game.Audio.Obj.win.play();
 			}
 		},
 		playClick: function(){
 			if(Game.Audio.music){
-				document.getElementById('click-audio').play();
+				Game.Audio.Obj.click.play();
 			}
 		}
 	}
 }
 
-Game.setup();
+Game.insertMedia();
