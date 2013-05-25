@@ -1,93 +1,78 @@
 var Game = {
 	animal: null,
 	setup: function(){
-		Game.Audio.stopAll();
-		Game.backToSplashScreen();
+		var canvas = document.getElementsByClassName('screen-background')[0].getContext('2d'),
+			element = document.getElementsByClassName('screen-elements')[0];
+		Game.Obj.screenCanvas = canvas;
+		Game.Obj.screenElements = element;
+		Game.Screen.drawLoading();
 		Game.buttonSetup();
-		Game.Audio.setLoop();
-	},
-	backToSplashScreen: function(){
-		var GameScreen = jQuery('.screen');
-		GameScreen.empty();
-		GameScreen.attr('class','screen splash sprite-all');
-		Game.Show.splash();
-		Game.Audio.playSplash();
-		Game.Audio.updateButtons();
 	},
 	buttonSetup: function(){
-		jQuery(document).on('click','.btn-help', function(){
+		Zepto(document).on('click','.btn-help', function(){
 			Game.Show.helpModal();
 		});
 
-		jQuery(document).on('click','.btn-back', function(){
-			jQuery('.help-screen').remove();
-			jQuery('.credit-screen').remove();
-			jQuery('.level-screen').remove();
+		Zepto(document).on('click','.btn-back', function(){
+			Zepto('.help-screen').remove();
+			Zepto('.credit-screen').remove();
+			Zepto('.level-screen').remove();
 		});
 
-		jQuery(document).on('click','.btn-credits', function(){
+		Zepto(document).on('click','.btn-credits', function(){
 			Game.Show.creditsModal();
 		});
 
-		jQuery(document).on('click','.btn-play', function(){
+		Zepto(document).on('click','.btn-play', function(){
 			Game.Show.levelModal();
 		});
 
-		jQuery(document).on('click','.btn-select-level', function(){
+		Zepto(document).on('click','.btn-select-level', function(){
 			Game.Show.levelModal();
 		});
 
-		jQuery(document).on('click','.btn-speech', function(){
+		Zepto(document).on('click','.btn-speech', function(){
 			Game.Speech.toggleRecord();
 		});
 
-		jQuery(document).on('click','.btn-sound', function(){
-			Game.Audio.toggleSound(jQuery(this));
+		Zepto(document).on('click','.btn-sound', function(){
+			Game.Audio.toggleSound(Zepto(this));
 		});
 
-		jQuery(document).on('click','.btn-volume', function(){
-			Game.Audio.toggleMusic(jQuery(this));
+		Zepto(document).on('click','.btn-volume', function(){
+			Game.Audio.toggleMusic(Zepto(this));
 		});
 
-		jQuery(document).on('click','.btn-back-to-game', function(){
-			jQuery('.pause-screen').remove();
+		Zepto(document).on('click','.btn-back-to-game', function(){
+			Zepto('.pause-screen').remove();
 		});
 
-		jQuery(document).on('click','.btn-menu', function(){
+		Zepto(document).on('click','.btn-menu', function(){
 			Game.Audio.stopGame();
 			Game.backToSplashScreen();
 		});
 
-		jQuery(document).on('click','.btn-pause', function(){
+		Zepto(document).on('click','.btn-pause', function(){
 			Game.Show.pauseModal();
 		});
 
-		jQuery(document).on('click','div[class*="btn-"]', function(){
+		Zepto(document).on('click','div[class*="btn-"]', function(){
 			Game.Audio.playClick();
 		});
 	},
-	insertMedia: function(){
-		var mediaObjects = ''+
-		'<div id="media">'+
-			'<img id="sprite-all" src="img/sprite-all.png"/>'+
-			'<img id="sprite-buttons" src="img/sprite-buttons.png"/>'+
-			'<audio id="win-audio" src="audio/audio-victory.mp3"></audio>'+
-			'<audio id="game-audio" src="audio/audio-game.mp3"></audio>'+
-			'<audio id="click-audio" src="audio/audio-mouse-click.wav"></audio>'+
-			'<audio id="splash-audio" src="audio/audio-splash.mp3"></audio>'+
-		'</div>';
-
-		jQuery("body").append(mediaObjects);
-		setTimeout(Game.setup,2000);
+	startSplash: function(){
+		Game.Screen.drawSplash();
+		Game.Show.splash();
 	},
 	startGame: function(level){
-		var GameScreen = jQuery('.screen');
+		console.log(level);
+		/*var GameScreen = Zepto('.screen');
 		GameScreen.empty();
 		GameScreen.attr('class','screen playing sprite-all');
 		Game.Show.play(Game.getAnimal());
 		Game.Speech.setup();
 		Game.Audio.playGame();
-		Game.Audio.updateButtons();
+		Game.Audio.updateButtons();*/
 	},
 	getAnimal: function(){
 		/***********************************************************
@@ -116,7 +101,7 @@ var Game = {
 	},
 	win: function(){
 		Game.Audio.playWin();
-		jQuery('.screen').addClass('win');
+		Zepto('.screen').addClass('win');
 	},
 	checkWin: function(speak){
 		if(speak == Game.animal){
@@ -125,11 +110,52 @@ var Game = {
 			alert('QUE PENA, VOCÊ ERROU');
 		}
 	},
+	Screen: {
+		drawLoading: function(){
+			var loadBg = new Image(),
+				loadArrow = new Image(),
+				thisCanvas = Game.Obj.screenCanvas;
+
+			thisCanvas.fillStyle = '#fff925';
+			thisCanvas.fillRect(0,0,1024,600);
+			loadBg.onload = function(){
+				thisCanvas.drawImage(loadBg,0,0);
+				loadArrow.onload = function(){
+					Game.Obj.screenElements.appendChild(loadArrow);
+					Game.Utils.insertMedia();
+				};
+				loadArrow.className = "load-arrow";
+				loadArrow.src = '/zoologicodotico/img/loading-arrow.png';
+			};
+			loadBg.src = '/zoologicodotico/img/loading.png';
+		},
+		drawSplash: function(){
+			var thisCanvas = Game.Obj.screenCanvas;
+			thisCanvas.fillStyle = '#ffffff';
+			thisCanvas.fillRect(0,0,1024,600);
+			thisCanvas.drawImage(Game.Obj.imageBgs,0,0);
+		},
+		drawSplashParrot: function(){
+			var thisCanvas = document.getElementsByClassName('splash-parrot')[0].getContext('2d');
+			thisCanvas.drawImage(Game.Obj.imageSplash,0,-600);
+			setTimeout(Game.Screen.drawSplashParrotBlink,5000);
+		},
+		drawSplashParrotBlink: function(){
+			var thisCanvas = document.getElementsByClassName('splash-parrot')[0].getContext('2d');
+			thisCanvas.drawImage(Game.Obj.imageSplash,0,0);
+			setTimeout(Game.Screen.drawSplashParrot,200);
+		}
+	},
 	Show: {
 		splash: function(){
-			var splashScreen = ''+
-				'<div class="light "></div>'+
-				'<div class="splash-parrot sprite-all"></div>'+
+			var thisView = Zepto(Game.Obj.screenElements),
+				splashElements = '';
+
+			thisView.empty();
+			thisView.attr('class','screen-elements splash');
+			splashElements = ''+
+				'<div class="light"></div>'+
+				'<canvas class="splash-parrot" width="823" height="570"></canvas>'+
 				'<div class="controls">'+
 					'<div class="btn-sound sprite-bt"></div>'+
 					'<div class="btn-volume sprite-bt"></div>'+
@@ -139,10 +165,16 @@ var Game = {
 					'<div class="btn-help sprite-bt"></div>'+
 				'</div>'+
 				'<div class="btn-credits sprite-bt"></div>';
-			jQuery('.screen').append(splashScreen);
+			thisView.append(splashElements);
+			Game.Screen.drawSplashParrot();
+			Game.Audio.updateButtons();
+			Game.Audio.playSplash();
 		},
 		play: function(animal){
-			var playScreen = ''+
+			var thisView = Zepto(Game.Obj.screenElements),
+				playScreen = '';
+
+			playScreen = ''+
 				'<div class="btn-pause sprite-bt"></div>'+
 				'<div class="controls">'+
 					'<div class="btn-sound sprite-bt"></div>'+
@@ -153,47 +185,47 @@ var Game = {
 				'<div class="textbox sprite-all"></div>'+
 				'<div class="btn-speech sprite-bt off"></div>'+
 				'<div class="light"></div>';
-			jQuery('.playing').append(playScreen);
+			thisView.append(playScreen);
 		},
 		pauseModal: function(){
 			var pauseScreen = ''+
 				'<div class="pause-screen">'+
-					'<div class="dialog sprite-all">'+
+					'<div class="dialog sprite-modal">'+
 						'<div class="btn-back-to-game sprite-bt"></div>'+
 						'<div class="btn-select-level sprite-bt"></div>'+
 						'<div class="btn-menu sprite-bt"></div>'+
 					'</div>'+
 				'</div>';
-			jQuery('.screen').append(pauseScreen);
+			Zepto('.screen-elements').append(pauseScreen);
 		},
 		creditsModal: function(){
 			var creditScreen = ''+
 				'<div class="credit-screen">'+
-					'<div class="dialog sprite-all">'+
+					'<div class="dialog sprite-modal">'+
 						'<div class="btn-back sprite-bt"></div>'+
 					'</div>'+
 				'</div>';
-			jQuery('.screen').append(creditScreen);
+			Zepto('.screen-elements').append(creditScreen);
 		},
 		helpModal: function(){
 			var helpScreen = ''+
 				'<div class="help-screen">'+
-					'<div class="dialog sprite-all"></div>'+
+					'<div class="dialog sprite-modal"></div>'+
 					'<div class="help-parrot sprite-all"></div>'+
 					'<div class="btn-back sprite-bt"></div>'+
 				'</div>';
-			jQuery('.screen').append(helpScreen);
+			Zepto('.screen-elements').append(helpScreen);
 		},
 		levelModal: function(){
 			var levelScreen = ''+
 				'<div class="level-screen">'+
-					'<div class="dialog sprite-all">'+
+					'<div class="dialog sprite-modal">'+
 						'<div class="btn-level1 sprite-bt"></div>'+
 						'<div class="btn-back sprite-bt"></div>'+
 					'</div>'+
 				'</div>';
-			jQuery('.screen').append(levelScreen);
-			jQuery('.level-screen').on('click','.btn-level1', function(){
+			Zepto('.screen-elements').append(levelScreen);
+			Zepto('.level-screen').on('click','.btn-level1', function(){
 				Game.Audio.stopSplash();
 				Game.startGame('level 1');
 			});
@@ -205,6 +237,73 @@ var Game = {
 				element.removeClass('off');
 			} else {
 				element.addClass('off');
+			}
+		},
+		insertMedia: function(){
+			var mediaObjects = 0,
+				audioWin = new Audio(),
+				audioGame = new Audio(),
+				audioClick = new Audio(),
+				audioSplash = new Audio(),
+				imageBgs = new Image(),
+				imageModal = new Image(),
+				imageSplash = new Image(),
+				imageButtons = new Image();
+
+			audioWin.addEventListener('canplaythrough', function(){
+				mediaObjects++;
+				Game.Utils.isMediaLoaded(mediaObjects);
+			});
+			audioGame.addEventListener('canplaythrough', function(){
+				mediaObjects++;
+				Game.Utils.isMediaLoaded(mediaObjects);
+			});
+			audioClick.addEventListener('canplaythrough', function(){
+				mediaObjects++;
+				Game.Utils.isMediaLoaded(mediaObjects);
+			});
+			audioSplash.addEventListener('canplaythrough', function(){
+				mediaObjects++;
+				Game.Utils.isMediaLoaded(mediaObjects);
+			});
+			imageBgs.onload = function(){
+				mediaObjects++;
+				Game.Utils.isMediaLoaded(mediaObjects);
+			};
+			imageModal.onload = function(){
+				mediaObjects++;
+				Game.Utils.isMediaLoaded(mediaObjects);
+			};
+			imageSplash.onload = function(){
+				mediaObjects++;
+				Game.Utils.isMediaLoaded(mediaObjects);
+			};
+			imageButtons.onload = function(){
+				mediaObjects++;
+				Game.Utils.isMediaLoaded(mediaObjects);
+			};
+
+			audioWin.src = '/zoologicodotico/audio/audio-victory.mp3';
+			audioGame.src = '/zoologicodotico/audio/audio-game.mp3';
+			audioClick.src = '/zoologicodotico/audio/audio-mouse-click.wav';
+			audioSplash.src = '/zoologicodotico/audio/audio-splash.mp3';
+			imageBgs.src = '/zoologicodotico/img/sprite-bg.png';
+			imageModal.src = '/zoologicodotico/img/sprite-splash.png';
+			imageSplash.src = '/zoologicodotico/img/sprite-splash.png';
+			imageButtons.src = '/zoologicodotico/img/sprite-buttons.png';
+
+			Game.Obj.audioWin = audioWin;
+			Game.Obj.audioGame = audioGame;
+			Game.Obj.audioClick = audioClick;
+			Game.Obj.audioSplash = audioSplash;
+			Game.Obj.imageBgs = imageBgs;
+			Game.Obj.imageModal = imageModal;
+			Game.Obj.imageSplash = imageSplash;
+			Game.Obj.imageButtons = imageButtons;
+		},
+		isMediaLoaded: function(qtd){
+			if(qtd == 7){
+				Game.startSplash();
 			}
 		}
 	},
@@ -229,7 +328,7 @@ var Game = {
 
 				Game.Speech.recognition.onstart = function() {
 					Game.Speech.recognizing = true;
-					jQuery('.btn-speech').removeClass('off').addClass('on');
+					Zepto('.btn-speech').removeClass('off').addClass('on');
 					console.log('START!');
 				};
 
@@ -245,7 +344,7 @@ var Game = {
 				Game.Speech.recognition.onend = function() {
 					Game.Speech.recognizing = false;
 					Game.Speech.result = '';
-					jQuery('.btn-speech').removeClass('on').addClass('off');
+					Zepto('.btn-speech').removeClass('on').addClass('off');
 					console.log('END!');
 				};
 
@@ -264,26 +363,9 @@ var Game = {
 	Audio: {
 		sound: true,
 		music: true,
-		Obj: {
-			splash: null,
-			game: null,
-			win: null,
-			click: null
-		},
-		stopAll: function(){
-			Game.Audio.Obj.splash = document.getElementById('splash-audio');
-			Game.Audio.Obj.game = document.getElementById('game-audio');
-			Game.Audio.Obj.win = document.getElementById('win-audio');
-			Game.Audio.Obj.click = document.getElementById('click-audio');
-
-			Game.Audio.Obj.splash.pause();
-			Game.Audio.Obj.game.pause();
-			Game.Audio.Obj.win.pause();
-			Game.Audio.Obj.click.pause();
-		},
 		updateButtons: function(){
-			var soundButton = jQuery('.btn-sound'),
-				volumeButton = jQuery('.btn-volume');
+			var soundButton = Zepto('.btn-sound'),
+				volumeButton = Zepto('.btn-volume');
 
 			if(!Game.Audio.music){
 				volumeButton.addClass('off');
@@ -294,20 +376,20 @@ var Game = {
 			}
 		},
 		toggleSound: function(element){
-			var screenObj = jQuery('.screen');
+			thisView = Zepto(Game.Obj.screenElements);
 			if(element.hasClass('off')){
 				Game.Audio.sound = true;
-				if(screenObj.hasClass('splash')){
-					Game.Audio.Obj.splash.play();
-				} else if(screenObj.hasClass('playing')){
-					Game.Audio.Obj.game.play();	
+				if(thisView.hasClass('splash')){
+					Game.Obj.audioSplash.play();
+				} else if(thisView.hasClass('playing')){
+					Game.Obj.audioGame.play();	
 				}
 			} else {
 				Game.Audio.sound = false;
-				if(screenObj.hasClass('splash')){
-					Game.Audio.Obj.splash.pause();
+				if(thisView.hasClass('splash')){
+					Game.Obj.audioSplash.pause();
 				} else if(screenObj.hasClass('playing')){
-					Game.Audio.Obj.game.pause();	
+					Game.Obj.audioGame.pause();	
 				}
 			}
 			Game.Utils.toggleOff(element);
@@ -317,43 +399,51 @@ var Game = {
 				Game.Audio.music = true;
 			} else {
 				Game.Audio.music = false;
-				Game.Audio.Obj.win.pause();
+				Game.Obj.audioWin.pause();
 			}
 			Game.Utils.toggleOff(element);
 		},
-		setLoop: function(){
-			Game.Audio.Obj.splash.loop = true;
-			Game.Audio.Obj.game.loop = true;
-		},
 		playSplash: function(){
 			if(Game.Audio.sound){
-				Game.Audio.Obj.splash.play();
+				Game.Obj.audioSplash.play();
 			}
 		},
 		stopSplash: function(){
-			Game.Audio.Obj.splash.pause();
-			Game.Audio.Obj.splash.currentTime = 0;
+			Game.Obj.audioSplash.pause();
+			Game.Obj.audioSplash.currentTime = 0;
 		},
 		playGame: function(){
 			if(Game.Audio.sound){
-				Game.Audio.Obj.game.play();
+				Game.Obj.audioGame.play();
 			}
 		},
 		stopGame: function(){
-			Game.Audio.Obj.game.pause();
-			Game.Audio.Obj.game.currentTime = 0;
+			Game.Obj.audioGame.pause();
+			Game.Obj.audioGame.currentTime = 0;
 		},
 		playWin: function(){
 			if(Game.Audio.music){
-				Game.Audio.Obj.win.play();
+				Game.Obj.audioWin.play();
 			}
 		},
 		playClick: function(){
 			if(Game.Audio.music){
-				Game.Audio.Obj.click.play();
+				Game.Obj.audioClick.play();
 			}
 		}
+	},
+	Obj: {
+		screenCanvas: null,
+		screenElements: null,
+		audioWin: null,
+		audioGame: null,
+		audioClick: null,
+		audioSplash: null,
+		imageBgs: null,
+		imageModal: null,
+		imageSplash: null,
+		imageButtons: null
 	}
 }
 
-Game.insertMedia();
+Game.setup();

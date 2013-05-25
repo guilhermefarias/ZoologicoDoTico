@@ -9,65 +9,66 @@ body {
 	background-color: #ccc;
 }
 
-.screen {
+#screen {
 	width: 1024px;
 	height: 600px;
+	display: block;
 	overflow: hidden;
 	position: relative;
 	margin: 20px auto 0;
 	box-shadow: 0 0 10px 1px #888;
 }
 
-.sprite-bt {
+.sprite-bt,
+.sprite-modal {
 	background-repeat: no-repeat;
+}
+
+.sprite-bt {
 	background-image: url(img/sprite-buttons.png);
 }
 
-.sprite-all {
-	background-repeat: no-repeat;
-	background-image: url(img/sprite-all.png);
+.sprite-modal {
+	background-image: url(img/sprite-modal.png);	
 }
 
-/*--------------- Load Screen ---------------*/
+/*--------------- Screen Background ---------------*/
 
-.screen.loading {
-	background-color: #fff925;
-	background-image: url(img/loading.png);
+.screen-elements {
+	top: 0;
+	left: 0;
+	width: 1024px;
+	height: 600px;
+	position: absolute;
 }
 
 .load-arrow {
+	left: 50%;
+	top: 230px;
 	width: 95px;
 	height: 95px;
 	display: block;
 	position: absolute;
-	left: 50%;
-	top: 230px;
 	margin-left: -47px;
-	background-position: center center;
-	background-repeat: no-repeat;
 	transform: rotate(0deg);
 	-webkit-transform: rotate(0deg);
 	animation: loadRotation linear 2s infinite;
 	-webkit-animation: loadRotation linear 2s infinite;
-	background-image: url(img/loading-arrow.png);	
 }
 
-/*--------------- Screen Elements ---------------*/
-
-.screen .controls {
+.controls {
 	top: 20px;
 	left: 905px;
 	width: 105px;
-	z-index: 1;
 	position: absolute;
 }
 
-.screen .controls div {
+.controls div {
 	margin-right: 5px;
 	display: inline-block;
 }
 
-.screen .light {
+.screen-elements .light {
 	width: 1429px;
 	height: 1429px;
 	position: absolute;
@@ -78,32 +79,13 @@ body {
 	background-image: url(img/light.png);
 }
 
-#media,
-#media * {
-	width: 0;
-	height: 0;
-	display: block;
-	overflow: hidden;
-}
-
 /*--------------- Splash Screen ---------------*/
-
-.splash {
-	background-position: 0 0;
-}
 
 .splash-parrot {
 	bottom: 0;
 	left: 50%;
-	width: 823px;
-	height: 570px;
 	position: absolute;
 	margin-left: -411px;
-	background-position: -1720px -1150px;
-}
-
-.splash-parrot.blink {
-	background-position: -1700px -550px;
 }
 
 .splash .light {
@@ -199,7 +181,7 @@ body {
 	width: 623px;
 	height: 480px;
 	margin: 10px auto;
-	background-position: -1035px -550px;
+	background-position: 0 -500px;
 }
 
 .help-screen .btn-back {
@@ -211,7 +193,7 @@ body {
 	height: 256px;
 	float: right;
 	margin: -180px 130px 0 0;
-	background-position: -1035px 0;
+	background-color: red;
 }
 
 /*--------------- Credit Modal ---------------*/
@@ -229,7 +211,7 @@ body {
 	height: 10px;
 	margin: 40px auto 0;
 	padding-top: 470px;
-	background-position: -1035px -1050px;
+	background-position: -650px 0;
 }
 
 .credit-screen .btn-back {
@@ -253,7 +235,7 @@ body {
 	height: 193px;
 	margin: 80px auto 0;
 	padding-top: 130px;
-	background-position: -2580px 0;
+	background-position: -650px -650px;
 }
 
 .pause-screen .dialog div {
@@ -280,7 +262,7 @@ body {
 	height: 359px;
 	margin: 60px auto 0;
 	padding-top: 120px;
-	background-position: -1930px 0;
+	background-position: 0 0;
 }
 
 .level-screen .btn-level1,
