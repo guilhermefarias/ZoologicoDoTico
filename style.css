@@ -129,9 +129,11 @@ body {
 }
 
 .animal {
+	left: 50%;
+	top: 20px;
 	z-index: 1;
-	position: relative;
-	background-image: url(img/sprite-all.png);
+	position: absolute;
+	margin-left: -250px;
 }
 
 .btn-pause {
@@ -141,13 +143,12 @@ body {
 }
 
 .play-parrot {
-	top: 375px;
 	left: 10px;
-	width: 177px;
-	height: 256px;
+	bottom: 10px;
 	z-index: 1;
+	opacity: 0.5;
 	position: absolute;
-	background-position: -2580px -350px;
+	background-color: blue;
 }
 
 .textbox {

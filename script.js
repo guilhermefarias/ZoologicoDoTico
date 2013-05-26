@@ -1,5 +1,4 @@
 var Game = {
-	animal: null,
 	setup: function(){
 		var canvas = document.getElementsByClassName('screen-background')[0].getContext('2d'),
 			element = document.getElementsByClassName('screen-elements')[0];
@@ -66,48 +65,63 @@ var Game = {
 	},
 	startGame: function(level){
 		console.log(level);
-		/*var GameScreen = Zepto('.screen');
-		GameScreen.empty();
-		GameScreen.attr('class','screen playing sprite-all');
-		Game.Show.play(Game.getAnimal());
+		Game.Screen.drawPlay();
+		Game.Show.play();
+		Game.Animal.setup();
+		Game.Audio.updateButtons();
 		Game.Speech.setup();
 		Game.Audio.playGame();
-		Game.Audio.updateButtons();*/
 	},
-	getAnimal: function(){
+	win: function(atualAnimal){
+		Game.Screen.drawPlayWin();
+		Game.Screen.drawAnimal(atualAnimal + ' win');
+		Zepto('.screen-elements').addClass('win');
+		Game.Audio.playWin();
+		Game.Animal.atualKey++;
+		setTimeout(Game.Animal.startRound,5000);
+	},
+	checkWin: function(speak){
+		var atualAnimal = Game.Animal.array[Game.Animal.atualKey];
+		console.log(speak, atualAnimal);
+		if(speak == atualAnimal){
+			Game.win(atualAnimal);
+		} else {
+			alert('QUE PENA, VOCÊ ERROU');
+		}
+	},
+	Animal: {
+		array: null,
+		atualKey: null,
+		setup: function(){
 		/***********************************************************
 		**                                                        **
 		**      Aqui fica todos os animais que estão no Jogo      **
-		**    Essa função escolhe aleatoriamente algum animal     **
 		**                                                        **
 		***********************************************************/
-		var animals = [],
-			animalsBr = [],
-			randomKey = null;
-		
-		animals[0] = "giraffe";
-		animals[1] = "shark";
-		animals[2] = "owl";
-		animals[3] = "kangaroo";
+			var animals = [];
+			animals[0] = "girafa";
+			animals[1] = "tubarão";
+			animals[2] = "coruja";
+			animals[3] = "canguru";
 
-		animalsBr[0] = "girafa";
-		animalsBr[1] = "tubarão";
-		animalsBr[2] = "coruja";
-		animalsBr[3] = "canguru";
+			Game.Animal.array = animals;
+			Game.Animal.atualKey = 0;
+			Game.Animal.startRound();
+		},
+		startRound: function(){
+			var key = Game.Animal.atualKey,
+				animal = Game.Animal.array[key];
 
-		randomKey = Math.floor(Math.random()*animals.length);
-		Game.animal = animalsBr[randomKey];
-		return animals[randomKey];
-	},
-	win: function(){
-		Game.Audio.playWin();
-		Zepto('.screen').addClass('win');
-	},
-	checkWin: function(speak){
-		if(speak == Game.animal){
-			Game.win();
-		} else {
-			alert('QUE PENA, VOCÊ ERROU');
+			if(key == Game.Animal.array.length){
+				alert('FIM DO JOGO');
+				window.location.reload();
+			} else if(key > 0){
+				Game.Screen.drawPlay();
+				Zepto('.screen-elements').removeClass('win');
+				Game.Screen.drawAnimal(animal);
+			} else {
+				Game.Screen.drawAnimal(animal);
+			}
 		}
 	},
 	Screen: {
@@ -144,6 +158,96 @@ var Game = {
 			var thisCanvas = document.getElementsByClassName('splash-parrot')[0].getContext('2d');
 			thisCanvas.drawImage(Game.Obj.imageSplash,0,0);
 			setTimeout(Game.Screen.drawSplashParrot,200);
+		},
+		drawPlay: function(){
+			var thisCanvas = Game.Obj.screenCanvas;
+			thisCanvas.drawImage(Game.Obj.imageBgs,0,-610);
+		},
+		drawPlayWin: function(){
+			var thisCanvas = Game.Obj.screenCanvas;
+			thisCanvas.drawImage(Game.Obj.imageBgs,0,-1220);
+		},
+		drawAnimal: function(thisAnimal){
+			var thisCanvas = document.getElementsByClassName('animal')[0].getContext('2d'),
+				animalW = 500,
+				animalH = 500,
+				animalX = 0,
+				animalY = 0;
+				danimalW = 500,
+				danimalH = 500,
+				danimalX = 0,
+				danimalY = 0;
+
+			switch(thisAnimal){
+				case 'girafa':
+					animalW = 180;
+					animalH = 344;
+					animalX = 180;
+					animalY = 430;
+					danimalX = 150;
+					danimalY = 60;
+					break;
+				case 'girafa win':
+					animalW = 180;
+					animalH = 344;
+					animalX = 0;
+					animalY = 430;
+					danimalX = 150;
+					danimalY = 60;
+					break;
+				case 'coruja':
+					animalW = 207;
+					animalH = 242;
+					animalX = 610;
+					animalY = 240;
+					danimalX = 150;
+					danimalY = 160;
+					break;
+				case 'coruja win':
+					animalW = 207;
+					animalH = 242;
+					animalX = 400;
+					animalY = 240;
+					danimalX = 150;
+					danimalY = 160;
+					break;
+				case 'tubarão':
+					animalW = 400;
+					animalH = 212;
+					animalX = 0;
+					animalY = 215;
+					danimalX = 40;
+					danimalY = 160;
+					break;
+				case 'tubarão win':
+					animalW = 400;
+					animalH = 212;
+					animalX = 0;
+					animalY = 0;
+					danimalX = 40;
+					danimalY = 160;
+					break;
+				case 'canguru':
+					animalW = 320;
+					animalH = 237;
+					animalX = 720;
+					animalY = 0;
+					danimalX = 100;
+					danimalY = 210;
+					break;
+				case 'canguru win':
+					animalW = 320;
+					animalH = 237;
+					animalX = 400;
+					animalY = 0;
+					danimalX = 100;
+					danimalY = 210;
+					break;
+				default:
+					break;
+			}
+			thisCanvas.clearRect(0,0,500,500);
+			thisCanvas.drawImage(Game.Obj.imageAnimal,animalX,animalY,animalW,animalH,danimalX,danimalY,animalW,animalH);
 		}
 	},
 	Show: {
@@ -174,15 +278,16 @@ var Game = {
 			var thisView = Zepto(Game.Obj.screenElements),
 				playScreen = '';
 
+			thisView.empty();
+			thisView.attr('class','screen-elements playing');
 			playScreen = ''+
 				'<div class="btn-pause sprite-bt"></div>'+
 				'<div class="controls">'+
 					'<div class="btn-sound sprite-bt"></div>'+
 					'<div class="btn-volume sprite-bt"></div>'+
 				'</div>'+
-				'<div class="animal '+ animal +'"></div>'+
-				'<div class="play-parrot sprite-all"></div>'+
-				'<div class="textbox sprite-all"></div>'+
+				'<canvas class="animal" width="500" height="500"></canvas>'+
+				'<canvas class="play-parrot" width="280" height="280"></canvas>'+
 				'<div class="btn-speech sprite-bt off"></div>'+
 				'<div class="light"></div>';
 			thisView.append(playScreen);
@@ -211,7 +316,7 @@ var Game = {
 			var helpScreen = ''+
 				'<div class="help-screen">'+
 					'<div class="dialog sprite-modal"></div>'+
-					'<div class="help-parrot sprite-all"></div>'+
+					'<div class="help-parrot"></div>'+
 					'<div class="btn-back sprite-bt"></div>'+
 				'</div>';
 			Zepto('.screen-elements').append(helpScreen);
@@ -248,6 +353,7 @@ var Game = {
 				imageBgs = new Image(),
 				imageModal = new Image(),
 				imageSplash = new Image(),
+				imageAnimal = new Image(),
 				imageButtons = new Image();
 
 			audioWin.addEventListener('canplaythrough', function(){
@@ -289,6 +395,7 @@ var Game = {
 			audioSplash.src = '/zoologicodotico/audio/audio-splash.mp3';
 			imageBgs.src = '/zoologicodotico/img/sprite-bg.png';
 			imageModal.src = '/zoologicodotico/img/sprite-splash.png';
+			imageAnimal.src = '/zoologicodotico/img/sprite-animal.png';
 			imageSplash.src = '/zoologicodotico/img/sprite-splash.png';
 			imageButtons.src = '/zoologicodotico/img/sprite-buttons.png';
 
@@ -299,10 +406,11 @@ var Game = {
 			Game.Obj.imageBgs = imageBgs;
 			Game.Obj.imageModal = imageModal;
 			Game.Obj.imageSplash = imageSplash;
+			Game.Obj.imageAnimal = imageAnimal;
 			Game.Obj.imageButtons = imageButtons;
 		},
 		isMediaLoaded: function(qtd){
-			if(qtd == 7){
+			if(qtd == 8){
 				Game.startSplash();
 			}
 		}
@@ -330,6 +438,8 @@ var Game = {
 					Game.Speech.recognizing = true;
 					Zepto('.btn-speech').removeClass('off').addClass('on');
 					console.log('START!');
+					var teste = prompt('animal'); ////////////////
+					Game.checkWin(teste); ///////////////////
 				};
 
 				Game.Speech.recognition.onerror = function(event) {
@@ -442,6 +552,7 @@ var Game = {
 		imageBgs: null,
 		imageModal: null,
 		imageSplash: null,
+		imageAnimal: null,
 		imageButtons: null
 	}
 }
