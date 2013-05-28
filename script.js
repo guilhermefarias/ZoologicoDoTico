@@ -16,7 +16,6 @@ var Game = {
 			Zepto('.help-screen').remove();
 			Zepto('.credit-screen').remove();
 			Zepto('.level-screen').remove();
-			Game.Screen.stopDraw();
 		});
 
 		Zepto(document).on('click','.btn-credits', function(){
@@ -82,13 +81,28 @@ var Game = {
 		setTimeout(Game.Animal.startRound,5000);
 	},
 	checkWin: function(speak){
-		var atualAnimal = Game.Animal.array[Game.Animal.atualKey];
+		var text = "",
+			timeout = 0,
+			atualAnimal = Game.Animal.array[Game.Animal.atualKey];
+
 		if(speak == atualAnimal){
 			Game.win(atualAnimal);
 		} else {
-			Game.Screen.drawPlayParrot();
-			Game.Screen.drawTextbox("Vamos lá! Eu sei que você consegue! Tente mais uma vez!",4000);
+			timeout = 2000;
+			text = "Vamos lá! Eu sei que você consegue! Tente mais uma vez!";
+			Game.startParrotSpeak(text,timeout);
 		}
+	},
+	startParrotSpeak: function(text,timeout){
+		Game.Screen.drawPlayParrot();
+		Game.Screen.drawTextbox(text);
+		setTimeout(Game.Screen.stopDraw, timeout);
+		setTimeout(Game.Screen.drawClearText,timeout);
+		setTimeout(Game.Screen.drawIdleParrot, timeout);
+	},
+	startHelpParrotSpeak: function(timeout){
+		Game.Screen.drawHelpParrot();
+		setTimeout(Game.Screen.stopDraw, timeout);
 	},
 	Animal: {
 		array: null,
@@ -110,35 +124,40 @@ var Game = {
 			Game.Animal.startRound();
 		},
 		startRound: function(){
-			var key = Game.Animal.atualKey,
+			var text = "",
+				timeout = 0,
+				key = Game.Animal.atualKey,
 				animal = Game.Animal.array[key];
 
 			if(key == Game.Animal.array.length){
 				alert('FIM DO JOGO');
 				window.location.reload();
+				return false;
 			} else if(key > 0){
 				Game.Screen.drawPlay();
-				Game.Screen.drawPlayParrot();
 				Zepto('.screen-elements').removeClass('win');
-				Game.Screen.drawAnimal(animal);
 				if(key == 1){
-					Game.Screen.drawTextbox('Esse tá fácil ein! Qual o nome dele?',2000);
+					timeout = 2000;
+					text = "Esse tá fácil ein! Qual o nome dele?";
 				} else if(key == 2){
-					Game.Screen.drawTextbox('Qual o nome desse bicho?',2000);
+					timeout = 2000;
+					text = "Qual o nome desse bicho?";
 				} else if(key == 3){
-					Game.Screen.drawTextbox('Hum.. esse aí tá difícil! Você sabe o nome dele?',2000);
+					timeout = 2000;
+					text = "Hum.. esse aí tá difícil! Você sabe o nome dele?";
 				}
-			} else {
-				Game.Screen.drawAnimal(animal);
-				Game.Screen.drawTextbox('Olha lá! O primeiro bicho apareceu! Qual será o nome dele? Aposto que você sabe!',2000);
 			}
+			timeout = 2000;
+			text = "Olha lá! O primeiro bicho apareceu! Qual será o nome dele? Aposto que você sabe!";
+			Game.Screen.drawAnimal(animal);
+			Game.startParrotSpeak(text,timeout);
 		}
 	},
 	Screen: {
 		time: null,
 		loop: null,
-		canvas: null,
-		canvasText: null,
+		parrot: null,
+		textbox: null,
 		stopDraw: function(){
 			Game.Screen.loop = null;
 		},
@@ -275,10 +294,9 @@ var Game = {
 		drawHelpParrot: function(){
 			var thisCanvas = document.getElementsByClassName('help-parrot')[0].getContext('2d');
 			thisCanvas.drawImage(Game.Obj.imageParrot,0,0);
-
 			Game.Screen.loop = 1;
 			Game.Screen.time = Date.now();
-			Game.Screen.canvas = thisCanvas;
+			Game.Screen.parrot = thisCanvas;
 			requestAnimationFrame(Game.Screen.reDrawHelpParrot);
 		},
 		reDrawHelpParrot: function(){
@@ -295,7 +313,7 @@ var Game = {
 						case 9:
 						case 13:
 						case 17:
-							Game.Screen.canvas.drawImage(Game.Obj.imageParrot,0,0,220,256,0,0,220,256);
+							Game.Screen.parrot.drawImage(Game.Obj.imageParrot,0,0,220,256,0,0,220,256);
 							break;
 
 						case 2:
@@ -303,7 +321,7 @@ var Game = {
 						case 10:
 						case 14:
 						case 18:
-							Game.Screen.canvas.drawImage(Game.Obj.imageParrot,220,0,220,256,0,0,220,256);
+							Game.Screen.parrot.drawImage(Game.Obj.imageParrot,220,0,220,256,0,0,220,256);
 							break;
 
 						case 3:
@@ -311,7 +329,7 @@ var Game = {
 						case 11:
 						case 15:
 						case 19:
-							Game.Screen.canvas.drawImage(Game.Obj.imageParrot,440,0,220,256,0,0,220,256);
+							Game.Screen.parrot.drawImage(Game.Obj.imageParrot,440,0,220,256,0,0,220,256);
 							break;
 
 						case 4:
@@ -319,11 +337,11 @@ var Game = {
 						case 12:
 						case 16:
 						case 20:
-							Game.Screen.canvas.drawImage(Game.Obj.imageParrot,220,0,220,256,0,0,220,256);
+							Game.Screen.parrot.drawImage(Game.Obj.imageParrot,220,0,220,256,0,0,220,256);
 							break;
 
 						case 21:
-							Game.Screen.canvas.drawImage(Game.Obj.imageParrot,660,0,220,256,0,0,220,256);
+							Game.Screen.parrot.drawImage(Game.Obj.imageParrot,660,0,220,256,0,0,220,256);
 							break;
 
 						default:
@@ -337,14 +355,11 @@ var Game = {
 			}
 		},
 		drawPlayParrot: function(){
-			var thisCanvas = document.getElementsByClassName('play-parrot')[0].getContext('2d');
 			Game.Screen.loop = 0;
 			Game.Screen.time = Date.now();
-			Game.Screen.canvas = thisCanvas;
-			thisCanvas.clearRect(0,0,300,300);
-			thisCanvas.drawImage(Game.Obj.imageParrot,440,260,220,256,10,0,220,256);
+			Game.Screen.parrot.clearRect(0,0,300,300);
+			Game.Screen.parrot.drawImage(Game.Obj.imageParrot,440,260,220,256,10,0,220,256);
 			Game.Screen.reDrawPlayParrot();
-			setTimeout(Game.Screen.drawIdleParrot,1000);
 		},
 		reDrawPlayParrot: function(){
 			if(Game.Screen.loop != null){
@@ -360,7 +375,7 @@ var Game = {
 						case 9:
 						case 13:
 						case 17:
-							Game.Screen.canvas.drawImage(Game.Obj.imageParrot,0,260,220,256,10,0,220,256);
+							Game.Screen.parrot.drawImage(Game.Obj.imageParrot,0,260,220,256,10,0,220,256);
 							break;
 
 						case 2:
@@ -368,7 +383,7 @@ var Game = {
 						case 10:
 						case 14:
 						case 18:
-							Game.Screen.canvas.drawImage(Game.Obj.imageParrot,220,260,220,256,10,0,220,256);
+							Game.Screen.parrot.drawImage(Game.Obj.imageParrot,220,260,220,256,10,0,220,256);
 							break;
 
 						case 3:
@@ -376,7 +391,7 @@ var Game = {
 						case 11:
 						case 15:
 						case 19:
-							Game.Screen.canvas.drawImage(Game.Obj.imageParrot,440,260,220,256,10,0,220,256);
+							Game.Screen.parrot.drawImage(Game.Obj.imageParrot,440,260,220,256,10,0,220,256);
 							break;
 
 						case 4:
@@ -384,11 +399,11 @@ var Game = {
 						case 12:
 						case 16:
 						case 20:
-							Game.Screen.canvas.drawImage(Game.Obj.imageParrot,220,260,220,256,10,0,220,256);
+							Game.Screen.parrot.drawImage(Game.Obj.imageParrot,220,260,220,256,10,0,220,256);
 							break;
 
 						case 21:
-							Game.Screen.canvas.drawImage(Game.Obj.imageParrot,660,260,220,256,10,0,220,256);
+							Game.Screen.parrot.drawImage(Game.Obj.imageParrot,660,260,220,256,10,0,220,256);
 							break;
 
 						default:
@@ -402,25 +417,21 @@ var Game = {
 			}
 		},
 		drawIdleParrot: function(){
-			Game.Screen.stopDraw();
-			Game.Screen.canvas.clearRect(0,0,300,300);
-			Game.Screen.canvas.drawImage(Game.Obj.imageParrot,0,520,178,256,10,0,178,256);
+			Game.Screen.parrot.clearRect(0,0,300,300);
+			Game.Screen.parrot.drawImage(Game.Obj.imageParrot,0,520,178,256,10,0,178,256);
 		},
 		drawWinParrot: function(){
-			Game.Screen.canvas.clearRect(0,0,220,256);
-			Game.Screen.canvas.drawImage(Game.Obj.imageParrot,360,520,280,256,0,0,280,256);
+			Game.Screen.parrot.clearRect(0,0,220,256);
+			Game.Screen.parrot.drawImage(Game.Obj.imageParrot,360,520,280,256,0,0,280,256);
 		},
-		drawTextbox: function(text,timeout){
-			var thisCanvas = document.getElementsByClassName('textbox')[0].getContext('2d');
-			thisCanvas.drawImage(Game.Obj.imageModal,650,500,663,125,0,0,663,125);
-			thisCanvas.font = '22px Calibri';
-      		thisCanvas.fillStyle = '#342c0e';
-      		thisCanvas.fillText(text,55, 30);
-      		setTimeout(Game.Screen.drawClearText,timeout);
+		drawTextbox: function(text){
+			Game.Screen.textbox.drawImage(Game.Obj.imageModal,650,500,663,125,0,0,663,125);
+			Game.Screen.textbox.font = '22px Calibri';
+      		Game.Screen.textbox.fillStyle = '#342c0e';
+      		Game.Screen.textbox.fillText(text,55, 30);
 		},
 		drawClearText: function(){
-			var thisCanvas = document.getElementsByClassName('textbox')[0].getContext('2d');
-			thisCanvas.clearRect(0,0,670,125);
+			Game.Screen.textbox.clearRect(0,0,670,125);
 		}
 	},
 	Show: {
@@ -465,7 +476,9 @@ var Game = {
 				'<div class="btn-speech sprite-bt off"></div>'+
 				'<div class="light"></div>';
 			thisView.append(playScreen);
-			Game.Screen.drawPlayParrot();
+			Game.Screen.parrot = document.getElementsByClassName('play-parrot')[0].getContext('2d');
+			Game.Screen.textbox = document.getElementsByClassName('textbox')[0].getContext('2d');
+			Game.Screen.drawIdleParrot();
 		},
 		pauseModal: function(){
 			var pauseScreen = ''+
@@ -495,7 +508,7 @@ var Game = {
 					'<div class="btn-back sprite-bt"></div>'+
 				'</div>';
 			Zepto('.screen-elements').append(helpScreen);
-			Game.Screen.drawHelpParrot();
+			Game.startHelpParrotSpeak(2000);
 		},
 		levelModal: function(){
 			var levelScreen = ''+
