@@ -60,6 +60,7 @@ body {
 	top: 20px;
 	left: 905px;
 	width: 105px;
+	z-index: 1;
 	position: absolute;
 }
 
@@ -144,11 +145,9 @@ body {
 
 .play-parrot {
 	left: 10px;
-	bottom: 10px;
+	bottom: 0;
 	z-index: 1;
-	opacity: 0.5;
 	position: absolute;
-	background-color: blue;
 }
 
 .textbox {
@@ -190,11 +189,8 @@ body {
 }
 
 .help-screen .help-parrot {
-	width: 220px;
-	height: 256px;
 	float: right;
 	margin: -180px 130px 0 0;
-	background-color: red;
 }
 
 /*--------------- Credit Modal ---------------*/

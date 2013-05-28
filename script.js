@@ -16,6 +16,7 @@ var Game = {
 			Zepto('.help-screen').remove();
 			Zepto('.credit-screen').remove();
 			Zepto('.level-screen').remove();
+			Game.Screen.stopDraw();
 		});
 
 		Zepto(document).on('click','.btn-credits', function(){
@@ -48,7 +49,7 @@ var Game = {
 
 		Zepto(document).on('click','.btn-menu', function(){
 			Game.Audio.stopGame();
-			Game.backToSplashScreen();
+			Game.startSplash();
 		});
 
 		Zepto(document).on('click','.btn-pause', function(){
@@ -64,7 +65,6 @@ var Game = {
 		Game.Show.splash();
 	},
 	startGame: function(level){
-		console.log(level);
 		Game.Screen.drawPlay();
 		Game.Show.play();
 		Game.Animal.setup();
@@ -76,13 +76,13 @@ var Game = {
 		Game.Screen.drawPlayWin();
 		Game.Screen.drawAnimal(atualAnimal + ' win');
 		Zepto('.screen-elements').addClass('win');
+		Game.Screen.drawWinParrot();
 		Game.Audio.playWin();
 		Game.Animal.atualKey++;
 		setTimeout(Game.Animal.startRound,5000);
 	},
 	checkWin: function(speak){
 		var atualAnimal = Game.Animal.array[Game.Animal.atualKey];
-		console.log(speak, atualAnimal);
 		if(speak == atualAnimal){
 			Game.win(atualAnimal);
 		} else {
@@ -117,6 +117,7 @@ var Game = {
 				window.location.reload();
 			} else if(key > 0){
 				Game.Screen.drawPlay();
+				Game.Screen.drawPlayParrot();
 				Zepto('.screen-elements').removeClass('win');
 				Game.Screen.drawAnimal(animal);
 			} else {
@@ -125,6 +126,12 @@ var Game = {
 		}
 	},
 	Screen: {
+		time: null,
+		loop: null,
+		canvas: null,
+		stopDraw: function(){
+			Game.Screen.loop = null;
+		},
 		drawLoading: function(){
 			var loadBg = new Image(),
 				loadArrow = new Image(),
@@ -248,6 +255,147 @@ var Game = {
 			}
 			thisCanvas.clearRect(0,0,500,500);
 			thisCanvas.drawImage(Game.Obj.imageAnimal,animalX,animalY,animalW,animalH,danimalX,danimalY,animalW,animalH);
+		},
+		drawHelpParrot: function(){
+			var thisCanvas = document.getElementsByClassName('help-parrot')[0].getContext('2d');
+			thisCanvas.drawImage(Game.Obj.imageParrot,0,0);
+
+			Game.Screen.loop = 1;
+			Game.Screen.time = Date.now();
+			Game.Screen.canvas = thisCanvas;
+			requestAnimationFrame(Game.Screen.reDrawHelpParrot);
+		},
+		reDrawHelpParrot: function(){
+			if(Game.Screen.loop != null){
+				var now = Date.now();
+				var delta = now - Game.Screen.time;
+
+			    delta = now - Game.Screen.time;
+
+				if(delta > 100){
+					switch(Game.Screen.loop){
+						case 1:
+						case 5:
+						case 9:
+						case 13:
+						case 17:
+							Game.Screen.canvas.drawImage(Game.Obj.imageParrot,0,0,220,256,0,0,220,256);
+							break;
+
+						case 2:
+						case 6:
+						case 10:
+						case 14:
+						case 18:
+							Game.Screen.canvas.drawImage(Game.Obj.imageParrot,220,0,220,256,0,0,220,256);
+							break;
+
+						case 3:
+						case 7:
+						case 11:
+						case 15:
+						case 19:
+							Game.Screen.canvas.drawImage(Game.Obj.imageParrot,440,0,220,256,0,0,220,256);
+							break;
+
+						case 4:
+						case 8:
+						case 12:
+						case 16:
+						case 20:
+							Game.Screen.canvas.drawImage(Game.Obj.imageParrot,220,0,220,256,0,0,220,256);
+							break;
+
+						case 21:
+							Game.Screen.canvas.drawImage(Game.Obj.imageParrot,660,0,220,256,0,0,220,256);
+							break;
+
+						default:
+							Game.Screen.loop = 0;
+							break;
+					}
+					Game.Screen.loop++;
+					Game.Screen.time = now - (delta % 100);
+				}
+				requestAnimationFrame(Game.Screen.reDrawHelpParrot);
+			}
+		},
+		drawPlayParrot: function(){
+			var thisCanvas = document.getElementsByClassName('play-parrot')[0].getContext('2d');
+			Game.Screen.loop = 0;
+			Game.Screen.time = Date.now();
+			Game.Screen.canvas = thisCanvas;
+			thisCanvas.clearRect(0,0,300,300);
+			thisCanvas.drawImage(Game.Obj.imageParrot,440,260,220,256,10,0,220,256);
+			Game.Screen.reDrawPlayParrot();
+			setTimeout(Game.Screen.drawIdleParrot,1000);
+		},
+		reDrawPlayParrot: function(){
+			if(Game.Screen.loop != null){
+				var now = Date.now();
+				var delta = now - Game.Screen.time;
+
+				delta = now - Game.Screen.time;
+
+				if(delta > 100){
+					switch(Game.Screen.loop){
+						case 1:
+						case 5:
+						case 9:
+						case 13:
+						case 17:
+							Game.Screen.canvas.drawImage(Game.Obj.imageParrot,0,260,220,256,10,0,220,256);
+							break;
+
+						case 2:
+						case 6:
+						case 10:
+						case 14:
+						case 18:
+							Game.Screen.canvas.drawImage(Game.Obj.imageParrot,220,260,220,256,10,0,220,256);
+							break;
+
+						case 3:
+						case 7:
+						case 11:
+						case 15:
+						case 19:
+							Game.Screen.canvas.drawImage(Game.Obj.imageParrot,440,260,220,256,10,0,220,256);
+							break;
+
+						case 4:
+						case 8:
+						case 12:
+						case 16:
+						case 20:
+							Game.Screen.canvas.drawImage(Game.Obj.imageParrot,220,260,220,256,10,0,220,256);
+							break;
+
+						case 21:
+							Game.Screen.canvas.drawImage(Game.Obj.imageParrot,660,260,220,256,10,0,220,256);
+							break;
+
+						default:
+							Game.Screen.loop = 0;
+							break;
+					}
+					Game.Screen.loop++;
+					Game.Screen.time = now - (delta % 100);
+				}
+				requestAnimationFrame(Game.Screen.reDrawPlayParrot);
+			}
+		},
+		drawIdleParrot: function(){
+			Game.Screen.stopDraw();
+			Game.Screen.canvas.clearRect(0,0,300,300);
+			Game.Screen.canvas.drawImage(Game.Obj.imageParrot,0,520,178,256,10,0,178,256);
+		},
+		drawWinParrot: function(){
+			Game.Screen.canvas.clearRect(0,0,220,256);
+			Game.Screen.canvas.drawImage(Game.Obj.imageParrot,360,520,280,256,0,0,280,256);
+		},
+		drawParrotText: function(text){
+
 		}
 	},
 	Show: {
@@ -287,10 +435,11 @@ var Game = {
 					'<div class="btn-volume sprite-bt"></div>'+
 				'</div>'+
 				'<canvas class="animal" width="500" height="500"></canvas>'+
-				'<canvas class="play-parrot" width="280" height="280"></canvas>'+
+				'<canvas class="play-parrot" width="280" height="225"></canvas>'+
 				'<div class="btn-speech sprite-bt off"></div>'+
 				'<div class="light"></div>';
 			thisView.append(playScreen);
+			Game.Screen.drawPlayParrot();
 		},
 		pauseModal: function(){
 			var pauseScreen = ''+
@@ -316,10 +465,11 @@ var Game = {
 			var helpScreen = ''+
 				'<div class="help-screen">'+
 					'<div class="dialog sprite-modal"></div>'+
-					'<div class="help-parrot"></div>'+
+					'<canvas class="help-parrot" width="220" height="256"></canvas>'+
 					'<div class="btn-back sprite-bt"></div>'+
 				'</div>';
 			Zepto('.screen-elements').append(helpScreen);
+			Game.Screen.drawHelpParrot();
 		},
 		levelModal: function(){
 			var levelScreen = ''+
@@ -353,6 +503,7 @@ var Game = {
 				imageBgs = new Image(),
 				imageModal = new Image(),
 				imageSplash = new Image(),
+				imageParrot = new Image(),
 				imageAnimal = new Image(),
 				imageButtons = new Image();
 
@@ -380,6 +531,14 @@ var Game = {
 				mediaObjects++;
 				Game.Utils.isMediaLoaded(mediaObjects);
 			};
+			imageParrot.onload = function(){
+				mediaObjects++;
+				Game.Utils.isMediaLoaded(mediaObjects);
+			};
+			imageAnimal.onload = function(){
+				mediaObjects++;
+				Game.Utils.isMediaLoaded(mediaObjects);
+			};
 			imageSplash.onload = function(){
 				mediaObjects++;
 				Game.Utils.isMediaLoaded(mediaObjects);
@@ -395,6 +554,7 @@ var Game = {
 			audioSplash.src = '/zoologicodotico/audio/audio-splash.mp3';
 			imageBgs.src = '/zoologicodotico/img/sprite-bg.png';
 			imageModal.src = '/zoologicodotico/img/sprite-splash.png';
+			imageParrot.src = '/zoologicodotico/img/sprite-parrot.png';
 			imageAnimal.src = '/zoologicodotico/img/sprite-animal.png';
 			imageSplash.src = '/zoologicodotico/img/sprite-splash.png';
 			imageButtons.src = '/zoologicodotico/img/sprite-buttons.png';
@@ -405,12 +565,13 @@ var Game = {
 			Game.Obj.audioSplash = audioSplash;
 			Game.Obj.imageBgs = imageBgs;
 			Game.Obj.imageModal = imageModal;
+			Game.Obj.imageParrot = imageParrot;
 			Game.Obj.imageSplash = imageSplash;
 			Game.Obj.imageAnimal = imageAnimal;
 			Game.Obj.imageButtons = imageButtons;
 		},
 		isMediaLoaded: function(qtd){
-			if(qtd == 8){
+			if(qtd == 10){
 				Game.startSplash();
 			}
 		}
@@ -437,9 +598,6 @@ var Game = {
 				Game.Speech.recognition.onstart = function() {
 					Game.Speech.recognizing = true;
 					Zepto('.btn-speech').removeClass('off').addClass('on');
-					console.log('START!');
-					var teste = prompt('animal'); ////////////////
-					Game.checkWin(teste); ///////////////////
 				};
 
 				Game.Speech.recognition.onerror = function(event) {
@@ -455,7 +613,6 @@ var Game = {
 					Game.Speech.recognizing = false;
 					Game.Speech.result = '';
 					Zepto('.btn-speech').removeClass('on').addClass('off');
-					console.log('END!');
 				};
 
 				Game.Speech.recognition.onresult = function(event) {
@@ -466,7 +623,7 @@ var Game = {
 				};
 			} else {
 				alert('Você precisa do Google Chrome para jogar :/');
-				Game.backToSplashScreen();
+				Game.startSplash();
 			}
 		}
 	},
@@ -498,7 +655,7 @@ var Game = {
 				Game.Audio.sound = false;
 				if(thisView.hasClass('splash')){
 					Game.Obj.audioSplash.pause();
-				} else if(screenObj.hasClass('playing')){
+				} else if(thisView.hasClass('playing')){
 					Game.Obj.audioGame.pause();	
 				}
 			}
@@ -551,8 +708,9 @@ var Game = {
 		audioSplash: null,
 		imageBgs: null,
 		imageModal: null,
-		imageSplash: null,
+		imageParrot: null,
 		imageAnimal: null,
+		imageSplash: null,
 		imageButtons: null
 	}
 }
