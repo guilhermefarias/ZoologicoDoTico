@@ -86,7 +86,8 @@ var Game = {
 		if(speak == atualAnimal){
 			Game.win(atualAnimal);
 		} else {
-			alert('QUE PENA, VOCÊ ERROU');
+			Game.Screen.drawPlayParrot();
+			Game.Screen.drawTextbox("Vamos lá! Eu sei que você consegue! Tente mais uma vez!",4000);
 		}
 	},
 	Animal: {
@@ -120,8 +121,16 @@ var Game = {
 				Game.Screen.drawPlayParrot();
 				Zepto('.screen-elements').removeClass('win');
 				Game.Screen.drawAnimal(animal);
+				if(key == 1){
+					Game.Screen.drawTextbox('Esse tá fácil ein! Qual o nome dele?',2000);
+				} else if(key == 2){
+					Game.Screen.drawTextbox('Qual o nome desse bicho?',2000);
+				} else if(key == 3){
+					Game.Screen.drawTextbox('Hum.. esse aí tá difícil! Você sabe o nome dele?',2000);
+				}
 			} else {
 				Game.Screen.drawAnimal(animal);
+				Game.Screen.drawTextbox('Olha lá! O primeiro bicho apareceu! Qual será o nome dele? Aposto que você sabe!',2000);
 			}
 		}
 	},
@@ -129,6 +138,7 @@ var Game = {
 		time: null,
 		loop: null,
 		canvas: null,
+		canvasText: null,
 		stopDraw: function(){
 			Game.Screen.loop = null;
 		},
@@ -201,6 +211,7 @@ var Game = {
 					animalY = 430;
 					danimalX = 150;
 					danimalY = 60;
+					Game.Screen.drawTextbox("É a GIRAFA! Você conseguiu! Parabéns!",4000);
 					break;
 				case 'coruja':
 					animalW = 207;
@@ -217,6 +228,7 @@ var Game = {
 					animalY = 240;
 					danimalX = 150;
 					danimalY = 160;
+					Game.Screen.drawTextbox("É a CORUJA! Você conseguiu! Parabéns!",4000);
 					break;
 				case 'tubarão':
 					animalW = 400;
@@ -233,6 +245,8 @@ var Game = {
 					animalY = 0;
 					danimalX = 40;
 					danimalY = 160;
+					Game.Screen.drawTextbox("É o TUBARÃO! Você conseguiu! Parabéns!",4000);
+
 					break;
 				case 'canguru':
 					animalW = 320;
@@ -249,6 +263,8 @@ var Game = {
 					animalY = 0;
 					danimalX = 100;
 					danimalY = 210;
+					Game.Screen.drawTextbox("É o CANGURU! Você conseguiu! Parabéns!",4000);
+
 					break;
 				default:
 					break;
@@ -394,8 +410,17 @@ var Game = {
 			Game.Screen.canvas.clearRect(0,0,220,256);
 			Game.Screen.canvas.drawImage(Game.Obj.imageParrot,360,520,280,256,0,0,280,256);
 		},
-		drawParrotText: function(text){
-
+		drawTextbox: function(text,timeout){
+			var thisCanvas = document.getElementsByClassName('textbox')[0].getContext('2d');
+			thisCanvas.drawImage(Game.Obj.imageModal,650,500,663,125,0,0,663,125);
+			thisCanvas.font = '22px Calibri';
+      		thisCanvas.fillStyle = '#342c0e';
+      		thisCanvas.fillText(text,55, 30);
+      		setTimeout(Game.Screen.drawClearText,timeout);
+		},
+		drawClearText: function(){
+			var thisCanvas = document.getElementsByClassName('textbox')[0].getContext('2d');
+			thisCanvas.clearRect(0,0,670,125);
 		}
 	},
 	Show: {
@@ -436,6 +461,7 @@ var Game = {
 				'</div>'+
 				'<canvas class="animal" width="500" height="500"></canvas>'+
 				'<canvas class="play-parrot" width="280" height="225"></canvas>'+
+				'<canvas class="textbox" width="665" height="125"></canvas>'+
 				'<div class="btn-speech sprite-bt off"></div>'+
 				'<div class="light"></div>';
 			thisView.append(playScreen);
@@ -553,7 +579,7 @@ var Game = {
 			audioClick.src = '/zoologicodotico/audio/audio-mouse-click.wav';
 			audioSplash.src = '/zoologicodotico/audio/audio-splash.mp3';
 			imageBgs.src = '/zoologicodotico/img/sprite-bg.png';
-			imageModal.src = '/zoologicodotico/img/sprite-splash.png';
+			imageModal.src = '/zoologicodotico/img/sprite-modal.png';
 			imageParrot.src = '/zoologicodotico/img/sprite-parrot.png';
 			imageAnimal.src = '/zoologicodotico/img/sprite-animal.png';
 			imageSplash.src = '/zoologicodotico/img/sprite-splash.png';

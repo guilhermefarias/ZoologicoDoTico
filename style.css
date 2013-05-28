@@ -153,11 +153,8 @@ body {
 .textbox {
 	z-index: 1;
 	top: 460px;
-	left: 150px;
-	width: 663px;
-	height: 125px;
+	left: 190px;
 	position: absolute;
-	background-position: -1035px -1550px;
 }
 
 .btn-speech {
