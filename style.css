@@ -164,6 +164,22 @@ body {
 	position: absolute;
 }
 
+.win .btn-speech {
+	display: none;
+}
+
+.btn-next {
+	top: 495px;
+	left: 865px;
+	z-index: 1;
+	display: none;
+	position: absolute;	
+}
+
+.win .btn-next {
+	display: block;
+}
+
 /*--------------- Help Modal ---------------*/
 
 .help-screen {
@@ -434,6 +450,20 @@ body {
 	background-position: -314px -338px;
 }
 
+.btn-next {
+	width: 150px;
+	height: 52px;
+	cursor: pointer;
+	background-position: 0px -551px;
+}
+
+.btn-next:hover {
+	background-position: -157px -551px;
+}
+
+.btn-next:active {
+	background-position: -307px -565px;
+}
 
 .btn-level1 {
 	background-position: 1px -452px;

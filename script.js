@@ -13,6 +13,7 @@ var Game = {
 		});
 
 		Zepto(document).on('click','.btn-back', function(){
+			Game.Screen.loop = null;
 			Zepto('.help-screen').remove();
 			Zepto('.credit-screen').remove();
 			Zepto('.level-screen').remove();
@@ -32,6 +33,10 @@ var Game = {
 
 		Zepto(document).on('click','.btn-speech', function(){
 			Game.Speech.toggleRecord();
+		});
+
+		Zepto(document).on('click','.btn-next', function(){
+			Game.Animal.startRound();
 		});
 
 		Zepto(document).on('click','.btn-sound', function(){
@@ -77,8 +82,7 @@ var Game = {
 		Zepto('.screen-elements').addClass('win');
 		Game.Screen.drawWinParrot();
 		Game.Audio.playWin();
-		Game.Animal.atualKey++;
-		setTimeout(Game.Animal.startRound,5000);
+		Game.Animal.atualKey++;		
 	},
 	checkWin: function(speak){
 		var text = "",
@@ -97,7 +101,6 @@ var Game = {
 		Game.Screen.drawPlayParrot();
 		Game.Screen.drawTextbox(text);
 		setTimeout(Game.Screen.stopDraw, timeout);
-		setTimeout(Game.Screen.drawClearText,timeout);
 		setTimeout(Game.Screen.drawIdleParrot, timeout);
 	},
 	startHelpParrotSpeak: function(timeout){
@@ -146,9 +149,10 @@ var Game = {
 					timeout = 2000;
 					text = "Hum.. esse aí tá difícil! Você sabe o nome dele?";
 				}
+			} else if(key == 0){
+				timeout = 2000;
+				text = "Olha lá! O primeiro bicho apareceu! Qual será o nome dele?";	
 			}
-			timeout = 2000;
-			text = "Olha lá! O primeiro bicho apareceu! Qual será o nome dele? Aposto que você sabe!";
 			Game.Screen.drawAnimal(animal);
 			Game.startParrotSpeak(text,timeout);
 		}
@@ -426,12 +430,9 @@ var Game = {
 		},
 		drawTextbox: function(text){
 			Game.Screen.textbox.drawImage(Game.Obj.imageModal,650,500,663,125,0,0,663,125);
-			Game.Screen.textbox.font = '22px Calibri';
+			Game.Screen.textbox.font = 'bold 20px Calibri';
       		Game.Screen.textbox.fillStyle = '#342c0e';
       		Game.Screen.textbox.fillText(text,55, 30);
-		},
-		drawClearText: function(){
-			Game.Screen.textbox.clearRect(0,0,670,125);
 		}
 	},
 	Show: {
@@ -474,6 +475,7 @@ var Game = {
 				'<canvas class="play-parrot" width="280" height="225"></canvas>'+
 				'<canvas class="textbox" width="665" height="125"></canvas>'+
 				'<div class="btn-speech sprite-bt off"></div>'+
+				'<div class="btn-next sprite-bt"></div>'+
 				'<div class="light"></div>';
 			thisView.append(playScreen);
 			Game.Screen.parrot = document.getElementsByClassName('play-parrot')[0].getContext('2d');
@@ -508,7 +510,7 @@ var Game = {
 					'<div class="btn-back sprite-bt"></div>'+
 				'</div>';
 			Zepto('.screen-elements').append(helpScreen);
-			Game.startHelpParrotSpeak(2000);
+			Game.startHelpParrotSpeak(5000);
 		},
 		levelModal: function(){
 			var levelScreen = ''+
