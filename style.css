@@ -447,56 +447,6 @@ body {
 	background-position: -182px -452px;
 }
 
-/*--------------- Animals ---------------*/
-
-.giraffe {
-	top: -35px;
-	left: 415px;
-	width: 180px;
-	height: 344px;
-	background-position: -2575px -910px;
-}
-
-.win .giraffe {
-	background-position: -2755px -910px;
-}
-
-.shark {
-	top:100px;
-	left: 325px;
-	width: 400px;
-	height: 212px;
-	background-position: 0 -1830px;
-}
-
-.win .shark {
-	background-position: -400px -1830px;
-}
-
-.owl {
-	top:80px;
-	left: 420px;
-	width: 207px;
-	height: 242px;
-	background-position: -2575px -1285px;
-}
-
-.win .owl {
-	background-position: -2575px -1550px;
-}
-
-.kangaroo {
-	top: 120px;
-	left: 370px;
-	width: 320px;
-	height: 237px;
-	background-position: -1150px -1825px;
-}
-
-.win .kangaroo {
-	background-position: -815px -1825px;
-}
-
 /*--------------- Keyframes ---------------*/
 
 @keyframes loadRotation {
